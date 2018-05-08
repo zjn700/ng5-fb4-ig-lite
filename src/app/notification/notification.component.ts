@@ -12,10 +12,12 @@ export class NotificationComponent implements OnInit {
   message: string = null;
   
   constructor(notificationService: NotificationService) {
+    
     notificationService.emitter.subscribe(
       data=>{
         this.type = data.type,
         this.message = data.message
+        console.log("notsvc")
         this.reset()
       })
     
