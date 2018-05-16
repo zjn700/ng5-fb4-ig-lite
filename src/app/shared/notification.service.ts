@@ -6,6 +6,8 @@ export class NotificationService {
     
   private sub = new Subject<any>();
   public emitter = this.sub.asObservable();
+  private subj = new Subject<any>();
+  public loader = this.subj.asObservable();
     
 
   constructor() { }
@@ -13,5 +15,10 @@ export class NotificationService {
   display(type, message){
       this.sub.next({type, message})
   }
+  
+  displayLoading(load, message) {
+      this.subj.next({load, message})
+  }
+
 
 }

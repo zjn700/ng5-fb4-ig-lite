@@ -8,8 +8,7 @@ export class RouteGuard implements CanActivate {
         if (firebase.auth().currentUser) {
             return true
         } else {
-            // return true
-            console.log("no")
+            console.log("routerguard - not logged in")
             return false
         }
         

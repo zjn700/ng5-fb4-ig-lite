@@ -39,7 +39,8 @@ export class LoginComponent implements OnInit {
         if (userDataFromDb){
           this.userService.setUserProfile(userDataFromDb)
           this.router.navigate(['/allposts'])
-          this.notificationService.display('success', `Welcome ${userDataFromDb.name}`)
+          // this.router.navigate(['/myposts'])
+          // this.notificationService.display('success', `Welcome ${userDataFromDb.name}`)
             
         }
       })

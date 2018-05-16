@@ -1,7 +1,6 @@
 import { EventEmitter } from '@angular/core';
 import { Observable } from "rxjs/Observable"
 import { Subject } from 'rxjs/Subject';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 
 // @Injectable()
@@ -26,6 +25,9 @@ export class UserService {
     return this.userProfile.asObservable();
   }
   
+  getUser() {
+    return JSON.parse(localStorage.getItem('user'));
+  }
   
   destroy() {
       localStorage.removeItem('user');
@@ -33,6 +35,9 @@ export class UserService {
 
   }
 }
+
+// import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+
 
   // private userProfileData = new BehaviorSubject<any>({name:"USER"});
     

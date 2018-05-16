@@ -9,7 +9,10 @@ import { NotificationService } from '../shared/notification.service'
 export class NotificationComponent implements OnInit {
 
   type: string = null;
+  load: string = null
   message: string = null;
+  image = "assets/images/Gray_circles_rotate.gif"
+  loading = false;
   
   constructor(notificationService: NotificationService) {
     
@@ -19,6 +22,13 @@ export class NotificationComponent implements OnInit {
         this.message = data.message
         console.log("notsvc")
         this.reset()
+      })
+      
+    notificationService.loader.subscribe(
+      data=>{
+        this.load = data.load,
+        this.message = data.message;
+        console.log("loader")
       })
     
     
@@ -31,7 +41,7 @@ export class NotificationComponent implements OnInit {
     setTimeout(()=>{
       this.type=null,
       this.message=null
-    }, 6000)
+    }, 3000)
   }
 
 }

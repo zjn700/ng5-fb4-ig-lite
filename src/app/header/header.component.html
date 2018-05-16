@@ -19,11 +19,11 @@
         <li class="nav-item" *ngIf="isLoggedIn" routerLinkActive="active">
             <a class="nav-link" routerLink="following">Following</a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link" *ngIf="isLoggedIn" routerLink="favorites">Favorites</a>
+        <li class="nav-item" *ngIf="isLoggedIn" routerLinkActive="active" >
+            <a class="nav-link" routerLink="favorites">Favorites</a>
         </li> 
-        <li class="nav-item">
-            <a class="nav-link" *ngIf="isLoggedIn" routerLink="myposts">My Posts</a>
+        <li class="nav-item" *ngIf="isLoggedIn" routerLinkActive="active" >
+            <a class="nav-link" routerLink="myposts">My Posts</a>
         </li> 
 
         <!--<li class="dropdown" *ngIf="isLoggedIn">-->
