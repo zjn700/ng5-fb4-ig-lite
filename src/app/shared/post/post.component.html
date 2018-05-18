@@ -7,9 +7,9 @@
 
   <div class="text-section">
     <div class="text-section-row row0">
-      <span>{{imageData.name}}</span>
+      <span>{{imageData.name}} {{imageKey}}</span>
     </div>
-
+ 
     <div *ngIf="imageData.createdOn" class="text-section-row row1">
       <span>Posted on: {{imageData.createdOn | date: 'MM/dd/yy'}}</span>
     </div>
@@ -17,21 +17,40 @@
     <div *ngIf="imageData.upLoadedBy && displayPostedBy" class="text-section-row row2">
       <span>Posted by: {{imageData.upLoadedBy.name}}</span>
     </div>
-
-    <div *ngIf="imageData.favoriteCount >= 0" class="text-section-row row3">
-      <span># of Fav: {{imageData.favoriteCount}}</span>
+    
+    <div class="text-section-row row3">
+      <!--<span *ngIf="imagekey==changedKey"># of Fav: {{imageData.favoriteCount + 1}} {{imageKey}} {{changedKey}}</span>-->
+      <span># of Fav: {{imageData.favoriteCount}} none</span>
+      <!--<span># of Fav: {{favoriteCount}}</span>-->
     </div>
 
-    <div class="text-section-row row4 action-row hvr-grow" *ngIf="displayFavoritesButton">
+    <!--<div *ngIf="imageData.favoriteCount >= 0 && changedKey==null" class="text-section-row row3">-->
+      <!--<span *ngIf="imagekey==changedKey"># of Fav: {{imageData.favoriteCount + 1}} {{imageKey}} {{changedKey}}</span>-->
+    <!--  <span># of Fav: {{imageData.favoriteCount}}</span>-->
+      <!--<span># of Fav: {{favoriteCount}}</span>-->
+    <!--</div>-->
+    
+    <!--<div *ngIf="imageData.favoriteCount >= 0 && changedKey==imageKey" class="text-section-row row3">-->
+    <!--  <span># of Fav: {{imageData.favoriteCount}}  blah</span>-->
+
+      <!--<span *ngIf="imagekey==changedKey"># of Fav: {{imageData.favoriteCount + 1}} {{imageKey}} {{changedKey}}</span>-->
+      <!--<span *ngIf="changedKey==null"># of Fav: {{imageData.favoriteCount}}</span>-->
+      <!--<span># of Fav: {{favoriteCount}}</span>-->
+    <!--</div>-->
+
+    <div class="text-section-row row4 action-row hvr-grow" *ngIf="displayFavoritesButton && changedKey==null">
       <span (click)="onFavoritesClicked()">
-        <span class="glyphicon glyphicon-glass"></span>
+        <!--<span class="glyphicon glyphicon-heart"></span>-->
+        <i class="fa fa-heart"></i>
         Add Image to Favorites
       </span>
     </div>
 
     <div class="text-section-row row5 action-row hvr-grow" *ngIf="displayFollowButton">
       <span (click)="onFollowClicked()">
-        <span class="glyphicon glyphicon-tags"></span>
+        <!--<span class="glyphicon glyphicon-tags"></span>-->
+        <!--<i class="fas fa-user-plus"></i>-->
+        <i class="fas fa-user-friends"></i>
         Follow User
       </span>
     </div>

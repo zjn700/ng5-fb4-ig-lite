@@ -12,7 +12,7 @@
       <div class="card shadow">
         <div class="card-body">         
             <div class="file d-block btn-shadow">
-              <button class="btn btn-info p-3 " (click)="onLoadMore()">Load More Images</button>
+              <button class="btn btn-info p-2 " (click)="onLoadMore()">Load More Images</button>
             </div>
             <!--<img class="card-img-top" src="{{image}}" alt="Card image">-->
          </div>
@@ -24,8 +24,8 @@
                   [imageKey]="post.data.imageKey"
                   [displayPostedBy] = "displayPostedBy"
                   [displayFavoritesButton] = "displayFavoritesButton"
-                  [displayFollowButton] = "displayFollowButton">
-        <!--          (favoriteClicked)="onFavoritesClicked($event)"-->
+                  [displayFollowButton] = "displayFollowButton"
+                  (favoriteClicked)="onFavoritesClicked($event)">
         <!--          (followClicked)="onFollowClicked($event)"-->
         <!-->-->
         </app-post>

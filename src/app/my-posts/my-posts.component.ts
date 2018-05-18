@@ -29,8 +29,10 @@ export class MyPostsComponent implements OnInit, OnDestroy {
     const uid = firebase.auth().currentUser.uid;
     this.personalPostRef = this.myFireService.getUserPostRef(uid);
     this.personalPostRef.on('child_added', data => {
+      console.log("data.val().imageKey", data.val().imageKey)
       this.postLists.push({
-        key: data.key,
+        // key: data.key,
+        key: data.val().imageKey,
         data: data.val()
       })
     })
@@ -61,5 +63,6 @@ export class MyPostsComponent implements OnInit, OnDestroy {
     }
     
   }
+  
 
 }

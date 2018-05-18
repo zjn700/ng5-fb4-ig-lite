@@ -1,5 +1,6 @@
 .container {
-    position: absolute;
+    /*position: absolute;*/
+    position: fixed;
     top:100px;
     left:10%;
     right:10%;
