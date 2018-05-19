@@ -11,10 +11,12 @@ import { MyFireService } from '../my-fire.service'
 export class PostComponent implements OnInit, OnDestroy {
   
   @Input() imageKey: string;
+  @Input() displayImage: boolean = true;
   @Input() displayPostedBy: boolean;
   @Input() displayFavoritesButton: boolean;
   @Input() displayFollowButton: boolean;
   @Input() favoriteCountChanged
+  curUserIsUploader: boolean;
   
   defaultImage: string = "assets/images/150x150.png";
   imageName: string = "";
@@ -22,6 +24,7 @@ export class PostComponent implements OnInit, OnDestroy {
   changedKey:string = null;
   
   @Output() favoriteClicked = new EventEmitter<any>();
+  @Output() removeFavoriteClicked = new EventEmitter<any>();
 
   subscription: Subscription;
 
@@ -58,6 +61,8 @@ export class PostComponent implements OnInit, OnDestroy {
      .then(snapshot => {
        this.imageData = snapshot.val();
        this.defaultImage = this.imageData.fileUrl;
+       this.curUserIsUploader = (uid == this.imageData.upLoadedBy.uid)
+
        // remove unique identifiers from the saved name
        let arr = (this.imageData.name).split('_');
        let removed = arr.splice(-1,2).join();
@@ -71,12 +76,27 @@ export class PostComponent implements OnInit, OnDestroy {
     
   }
   
+  onRemoveFavoritesClicked() {
+   console.log("onRemoveFavoritesClicked")
+   this.removeFavoriteClicked.emit({imageKey:this.imageKey, imageData:this.imageData})
+   const subscription = this.myFireService.getFavoriteUpdate()
+      .subscribe(message => { 
+        console.log("remove", message)
+        this.changedKey = null;
+        this.displayFavoritesButton = true;
+        // this.myFireService.clearMessage()
+        subscription.unsubscribe();
+      });  
+  }
+  
   onFavoritesClicked() {
     // EventEmitter and Observable/Subject subscription combined
     this.favoriteClicked.emit({imageKey:this.imageKey, imageData:this.imageData})
     const subscription = this.myFireService.getFavoriteUpdate()
       .subscribe(message => { 
-        this.changedKey = this.imageKey
+        console.log("add fav", message)
+        this.changedKey = this.imageKey;
+        // this.myFireService.clearMessage()
         subscription.unsubscribe();
       });       
       

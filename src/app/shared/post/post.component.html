@@ -20,7 +20,7 @@
     
     <div class="text-section-row row3">
       <!--<span *ngIf="imagekey==changedKey"># of Fav: {{imageData.favoriteCount + 1}} {{imageKey}} {{changedKey}}</span>-->
-      <span># of Fav: {{imageData.favoriteCount}} none</span>
+      <span># of Fav: {{imageData.favoriteCount}}</span>
       <!--<span># of Fav: {{favoriteCount}}</span>-->
     </div>
 
@@ -43,6 +43,14 @@
         <!--<span class="glyphicon glyphicon-heart"></span>-->
         <i class="fa fa-heart"></i>
         Add Image to Favorites
+      </span>
+    </div>
+    
+    <div class="text-section-row row4 action-row hvr-grow" *ngIf="(!displayFavoritesButton && !curUserIsUploader) || changedKey!=null">
+      <span (click)="onRemoveFavoritesClicked()">
+        <!--<span class="glyphicon glyphicon-heart"></span>-->
+        <i class="fa fa-heart"></i>
+        Remove Image to Favorites
       </span>
     </div>
 

@@ -3,6 +3,7 @@ import * as firebase from 'firebase';
 import { UserService } from './user.service';
 import { Observable } from 'rxjs';
 import { Subject } from 'rxjs/Subject';
+import * as _ from "lodash";
 
 @Injectable()
 export class MyFireService {
@@ -90,17 +91,36 @@ export class MyFireService {
     
   }
 
-  handleFavoriteClicked(image) {
+handleRemoveFavoriteClicked(image) {
     const uid = firebase.auth().currentUser.uid;
     
     const updates = {}
     
-    // if (image.imageData.oldFavoriteCount) {
-    //   image.imageData.oldFavoriteCount += 1
-    //   console.log("image.imageData.oldFavoriteCount", image.imageData.oldFavoriteCount)
-    // } else {
-    //   image.imageData.oldFavoriteCount = 0
-    // }
+    if (image.imageData.favoriteCount > 1) {
+      image.imageData.oldFavoriteCount -= 1;
+      image.imageData.favoriteCount -= 1
+      console.log("image.imageData.favoriteCount", image.imageData.favoriteCount)
+      console.log("image.imageData.oldFavoriteCount", image.imageData.oldFavoriteCount)
+
+    } else {
+      image.imageData.favoriteCount = 0
+      image.imageData.oldFavoriteCount = null;
+    }
+  
+    
+    updates['/images/' + image.imageKey + "/oldFavoriteCount"] = image.imageData.oldFavoriteCount;
+    updates['/images/' + image.imageKey + "/favoriteCount"] = image.imageData.favoriteCount;
+    // updates['/favorites/' + uid + "/" + image.imageKey] = image.imageData;
+    firebase.database().ref('favorites/' + uid + '/' + image.imageKey).remove()
+
+    return firebase.database().ref().update(updates);
+    
+  }
+
+  handleFavoriteClicked(image) {
+    const uid = firebase.auth().currentUser.uid;
+    
+    const updates = {}
     
     if (image.imageData.favoriteCount) {
       image.imageData.oldFavoriteCount = image.imageData.favoriteCount;
@@ -112,13 +132,10 @@ export class MyFireService {
       image.imageData.favoriteCount = 1
       image.imageData.oldFavoriteCount = 0;
     }
-    
-    // image.imageData.oldFavoriteCount += 1
-    // image.imageData.favoriteCount += 1
+  
     
     updates['/images/' + image.imageKey + "/oldFavoriteCount"] = image.imageData.oldFavoriteCount;
     updates['/images/' + image.imageKey + "/favoriteCount"] = image.imageData.favoriteCount;
-    // updates['/images/' + image.imageKey + "/favoriteCount"] = image.imageData.favoriteCount + 1;
     updates['/favorites/' + uid + "/" + image.imageKey] = image.imageData;
     
     return firebase.database().ref().update(updates);
@@ -127,6 +144,16 @@ export class MyFireService {
   
   getUserPostRef(uid) {
     return firebase.database().ref('myposts').child(uid);
+  }
+  
+  removeImage(arr, key) {
+    console.log("remove image")
+    let index = _.findIndex(arr, {key: key});
+    console.log("remove index", index);
+    arr.splice(index, 1);
+    return arr
+
+    // _.update(this.all, 'a[0].b.c', function(n) { return n * n; });
   }
   
   

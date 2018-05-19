@@ -73,42 +73,29 @@ export class AllPostsComponent implements OnInit, OnDestroy {
     
   }
   
-  onFavoritesClicked(imageData){
-    this.myFireService.handleFavoriteClicked(imageData)
+  onRemoveFavoritesClicked(imageData){
+    this.myFireService.handleRemoveFavoriteClicked(imageData)
       .then(data => {
-        this.notificationService.display("info", "Image added to favorites")
+        this.notificationService.display("info", "Image removed from favorites")
         this.myFireService.setFavoriteUpdate(imageData.imageKey);
-       
-        // this.favoriteCount += imageData.favoriteCount + 1;
-        
-        // this.favoriteCountChanged.emit({imageKey:imageData.imageKey})
-
-        // firebase.database().ref('images').child(imageData.imageKey)
-        // .once('value')
-        // .then(snapshot => {
-        //   this.imageData = snapshot.val();
-        //   this.defaultImage = this.imageData.favorites;
-        // });
-        
-        
-        // console.log("this.all", this.all)
-        // console.log("imageData.imageKey",imageData.imageKey)
-        // let index2 = _.findIndex(this.all, {data: {imageKey: imageData.imageKey}});
-        // let index = _.findIndex(this.all, {key: imageData.imageKey});
-        // _.update(this.all, 'a[0].b.c', function(n) { return n * n; });
-        // console.log("index2", index2)
-        // console.log("index", index)
-        // console.log("this.all[index]", this.all[index])
-        
-        // const favcount = imageData.favoriteCount + 1
-
       })
       .catch(err => {
         console.log('err', err.message)
         this.notificationService.display("error", err.message)
-
       })
     
+  }
+  
+  onFavoritesClicked(imageData){
+    this.myFireService.handleFavoriteClicked(imageData)
+      .then(data => {
+        this.notificationService.display("info", "Image added to favorites")
+        this.myFireService.setFavoriteUpdate(imageData.imageKey)
+      })
+      .catch(err => {
+        console.log('err', err.message)
+        this.notificationService.display("error", err.message)
+      })
   }
 
 }
