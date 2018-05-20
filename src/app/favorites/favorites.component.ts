@@ -31,26 +31,36 @@ export class FavoritesComponent implements OnInit {
     console.log("this.allRef", this.allRef)
     
     this.allRef.on('child_added', data => {
+
       console.log("data", data)
       console.log("data.val", data.val())
       this.all.push({
         key: data.key,
         data: data.val()
       });
-    });    
-    
-    console.log("this.all", this.all)
+      console.log("this.all", this.all)
 
-    if (this.all.length==0) {
-      console.log('wtf')
-      this.notificationService.display("info", "You have have no favorites")
-    }
+      // if (this.all.length==0) {
+      //   console.log('wtf')
+      //   this.notificationService.display("info", "You have have no favorites")
+      // }      
+      
+    });    
+    setTimeout(()=>{this.checkForPosts();}, 500)
+  }
+  
+  checkForPosts() {
+    console.log("in checkForPosts")
+      if (this.all.length==0) {
+        console.log('wtf')
+        this.notificationService.display("info", "You have have no favorites")
+      }        
   }
   
   onRemoveFavoritesClicked(imageData){
     this.myFireService.handleRemoveFavoriteClicked(imageData)
       .then(data => {
-        this.notificationService.display("info", "Image removed from favorites")
+        this.notificationService.display("info", "One image was removed from favorites")
         this.myFireService.setFavoriteUpdate(imageData.imageKey);
         this.displayImage = false;
         this.all = this.myFireService.removeImage(this.all,imageData.imageKey )

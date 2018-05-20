@@ -9,7 +9,7 @@
   <div class="row">
     <div class="col-lg-12">
       
-      <div class="card shadow">
+      <div class="card shadow" *ngIf="!endOfAllposts">
         <div class="card-body">         
             <div class="file d-block btn-shadow">
               <button class="btn btn-info p-2 " (click)="onLoadMore()">Load More Images</button>

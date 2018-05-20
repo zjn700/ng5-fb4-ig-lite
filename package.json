@@ -23,6 +23,7 @@
     "@angular/router": "^5.2.0",
     "bootstrap": "^4.1.0",
     "core-js": "^2.4.1",
+    "croppie": "^2.6.2",
     "firebase": "^4.3.0",
     "jquery": "^3.3.1",
     "lodash": "^4.17.10",

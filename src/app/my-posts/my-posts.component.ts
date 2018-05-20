@@ -2,7 +2,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NotificationService } from '../shared/notification.service'
 import { MyFireService } from '../shared/my-fire.service'
 import * as firebase from 'firebase';
-
+import * as croppie from 'croppie';
+import * as $ from 'jquery'
 
 @Component({
   selector: 'app-my-posts',
@@ -29,7 +30,6 @@ export class MyPostsComponent implements OnInit, OnDestroy {
     const uid = firebase.auth().currentUser.uid;
     this.personalPostRef = this.myFireService.getUserPostRef(uid);
     this.personalPostRef.on('child_added', data => {
-      console.log("data.val().imageKey", data.val().imageKey)
       this.postLists.push({
         // key: data.key,
         key: data.val().imageKey,
@@ -45,6 +45,13 @@ export class MyPostsComponent implements OnInit, OnDestroy {
     if (fileList.length > 0) {
       const file: File = fileList[0];
       this.notificationService.displayLoading('info', "Uploading your image: " + file.name)
+       
+    //   $('.my-image').click(function(){
+    //     $(this).hide();
+    // });
+    // $('.my-image').croppie()
+        
+        
 
       this.myFireService.uploadFile(file)
         .then(data => {

@@ -14,12 +14,15 @@ export class AllPostsComponent implements OnInit, OnDestroy {
   allRef: any;
   all: any = [];
   loadMoreRef: any;
+  totalImagesLoaded = 0;
+  private maxPerLoad: number = 4
   
   // @Output() favoriteCountChanged = new EventEmitter<any>();
   
   displayPostedBy: boolean = true;
   displayFavoritesButton: boolean = true;
   displayFollowButton: boolean = true;  
+  endOfAllposts:boolean = false;
   
   constructor(private myFireService: MyFireService, private notificationService: NotificationService) { }
   
@@ -32,12 +35,15 @@ export class AllPostsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     
-    this.allRef = firebase.database().ref('allposts').limitToFirst(9);
+    this.allRef = firebase.database().ref('allposts').limitToFirst(this.maxPerLoad);
+    
     this.allRef.on('child_added', data => {
       this.all.push({
         key: data.val().imageKey,
         data: data.val()
       });
+      this.totalImagesLoaded += 1
+
     });
 
     // var query = firebase.database().ref("images");
@@ -50,25 +56,31 @@ export class AllPostsComponent implements OnInit, OnDestroy {
   
   onLoadMore() {
     
-    if (this.all.length > 0) {
+     this.endOfAllposts = (this.totalImagesLoaded % this.maxPerLoad != 0)
+     if (this.endOfAllposts) {
+        this.notificationService.display("info", "There are no more posts")
+     }
 
-      const lastLoadedPost = _.last(this.all);
-      const lastLoadedPostKey = lastLoadedPost.key;
+    if (this.all.length > 0) {
       
-      this.loadMoreRef = firebase.database().ref('allposts').startAt(null, lastLoadedPostKey).limitToFirst(9+1)
- 
+      const lastLoadedPost = _.last(this.all);
+      const lastLoadedPostKey = lastLoadedPost.key
+
+      this.loadMoreRef = firebase.database().ref('allposts').startAt(null, lastLoadedPostKey).limitToFirst(this.maxPerLoad+1)
       this.loadMoreRef.on('child_added', data => {
-        if (data.key === lastLoadedPostKey) {
+        if (data.val().imageKey === lastLoadedPostKey) {
           return;
         } else {
           this.all.push({
             key: data.val().imageKey,
             data: data.val()
           });
+          this.totalImagesLoaded += 1
+
         }
-        
+         
       })
- 
+
     }
     
   }

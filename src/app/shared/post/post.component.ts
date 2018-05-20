@@ -44,15 +44,15 @@ export class PostComponent implements OnInit, OnDestroy {
       .once('value')
       .then(snapshot => {
         if (snapshot.val()){
-          
-          console.log("this.imageKey", this.imageKey )
-          console.log('key snapshot', snapshot.key)          
-          console.log('fav snapshot', snapshot.val().favoriteCount)
+          // console.log("this.imageKey", this.imageKey )
+          // console.log('key snapshot', snapshot.key)          
+          // console.log('fav snapshot', snapshot.val().favoriteCount)
           this.displayFavoritesButton = (this.imageKey != snapshot.key)
           
-        } else {
-          console.log('not favorited')
-        }
+        } 
+        // else {
+        //   console.log('not favorited')
+        // }
       })
 
     
@@ -77,11 +77,9 @@ export class PostComponent implements OnInit, OnDestroy {
   }
   
   onRemoveFavoritesClicked() {
-   console.log("onRemoveFavoritesClicked")
    this.removeFavoriteClicked.emit({imageKey:this.imageKey, imageData:this.imageData})
    const subscription = this.myFireService.getFavoriteUpdate()
       .subscribe(message => { 
-        console.log("remove", message)
         this.changedKey = null;
         this.displayFavoritesButton = true;
         // this.myFireService.clearMessage()
@@ -94,7 +92,6 @@ export class PostComponent implements OnInit, OnDestroy {
     this.favoriteClicked.emit({imageKey:this.imageKey, imageData:this.imageData})
     const subscription = this.myFireService.getFavoriteUpdate()
       .subscribe(message => { 
-        console.log("add fav", message)
         this.changedKey = this.imageKey;
         // this.myFireService.clearMessage()
         subscription.unsubscribe();
