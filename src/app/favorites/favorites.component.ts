@@ -57,7 +57,7 @@ export class FavoritesComponent implements OnInit {
       }        
   }
   
-  onRemoveFavoritesClicked(imageData){
+  onRemoveFavoriteClicked(imageData){
     this.myFireService.handleRemoveFavoriteClicked(imageData)
       .then(data => {
         this.notificationService.display("info", "One image was removed from favorites")

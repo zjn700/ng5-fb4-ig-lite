@@ -1,1 +1,22 @@
 <span class="d-block p-2 bg-secondary text-white">Following</span>
+<div class="container">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="image-container">
+
+        <app-post *ngFor="let post of postList"
+                  [post]="post"
+                  [imageKey]="post.data.imageKey"
+                  [displayFavoriteButton]="false"
+                  [inFollowing]="true"
+                  (unfollowUser)="onRemoveFollowedUser($event)">
+
+                  >
+        </app-post>
+      </div>
+    </div>
+  </div>
+</div>
+
+                  <!--[displayFollowButton]="false"-->
+                  <!--[displayFavoriteButton]="false"-->

@@ -19,18 +19,39 @@
       </div>      
       
 
+      <!--<div class="image-container">-->
+      <!--  <app-post *ngFor="let post of all"-->
+      <!--            [imageKey]="post.data.imageKey"-->
+      <!--            [uploadedBy]="post.data.upLoadedBy.uid"-->
+      <!--            [displayPostedBy] = "displayPostedBy"-->
+      <!--            [displayFavoriteButton] = "displayFavoriteButton"-->
+      <!--            [displayFollowButton] = "displayFollowButton"-->
+      <!--            [newFollowedUser] = "newFollowedUser"-->
+      <!--            (favoriteClicked)="onFavoriteClicked($event)"-->
+      <!--            (removeFavoriteClicked)="onRemoveFavoriteClicked($event)"-->
+      <!--            (followUser)="onFollowUser($event)"-->
+      <!--            (unfollowUser)="onRemoveFollowedUser($event)">-->
+        <!-->-->
+      <!--  </app-post>-->
+      <!--</div>-->
+      
       <div class="image-container">
         <app-post *ngFor="let post of all"
+                  [post]="post"
                   [imageKey]="post.data.imageKey"
+                  [uploadedBy]="post.data.upLoadedBy.uid"
                   [displayPostedBy] = "displayPostedBy"
-                  [displayFavoritesButton] = "displayFavoritesButton"
+                  [displayFavoriteButton] = "displayFavoriteButton"
                   [displayFollowButton] = "displayFollowButton"
-                  (favoriteClicked)="onFavoritesClicked($event)"
-                  (removeFavoriteClicked)="onRemoveFavoritesClicked($event)">
-        <!--          (followClicked)="onFollowClicked($event)"-->
+                  [newFollowedUser] = "newFollowedUser"
+                  (favoriteClicked)="onFavoriteClicked($event)"
+                  (removeFavoriteClicked)="onRemoveFavoriteClicked($event)"
+                  (followUser)="onFollowUser($event)"
+                  (unfollowUser)="onRemoveFollowedUser($event)">
         <!-->-->
         </app-post>
       </div>
+      
 
     </div>
   </div>

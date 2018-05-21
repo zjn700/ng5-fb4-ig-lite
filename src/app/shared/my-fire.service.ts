@@ -12,12 +12,19 @@ export class MyFireService {
   
   constructor(private userService: UserService) {}
 
+  // USER
   getUserFromDatabase(uid) {
     const ref = firebase.database().ref('users/' + uid);
     return ref.once('value')
               .then(snapshot => snapshot.val())
   }
   
+  getUserPostRef(uid) {
+    return firebase.database().ref('myposts').child(uid);
+  }
+  
+  
+  // FILE UPLOAD
   uploadFile(file) {
     
     const fileName = this.randomizeFileName(file.name)
@@ -90,33 +97,9 @@ export class MyFireService {
     return firebase.database().ref().update(updates)
     
   }
-
-handleRemoveFavoriteClicked(image) {
-    const uid = firebase.auth().currentUser.uid;
-    
-    const updates = {}
-    
-    if (image.imageData.favoriteCount > 1) {
-      image.imageData.oldFavoriteCount -= 1;
-      image.imageData.favoriteCount -= 1
-      console.log("image.imageData.favoriteCount", image.imageData.favoriteCount)
-      console.log("image.imageData.oldFavoriteCount", image.imageData.oldFavoriteCount)
-
-    } else {
-      image.imageData.favoriteCount = 0
-      image.imageData.oldFavoriteCount = null;
-    }
   
-    
-    updates['/images/' + image.imageKey + "/oldFavoriteCount"] = image.imageData.oldFavoriteCount;
-    updates['/images/' + image.imageKey + "/favoriteCount"] = image.imageData.favoriteCount;
-    // updates['/favorites/' + uid + "/" + image.imageKey] = image.imageData;
-    firebase.database().ref('favorites/' + uid + '/' + image.imageKey).remove()
-
-    return firebase.database().ref().update(updates);
-    
-  }
-
+  
+  // FAVORITES
   handleFavoriteClicked(image) {
     const uid = firebase.auth().currentUser.uid;
     
@@ -142,8 +125,30 @@ handleRemoveFavoriteClicked(image) {
     
   }
   
-  getUserPostRef(uid) {
-    return firebase.database().ref('myposts').child(uid);
+  handleRemoveFavoriteClicked(image) {
+    const uid = firebase.auth().currentUser.uid;
+    
+    const updates = {}
+    
+    if (image.imageData.favoriteCount > 1) {
+      image.imageData.oldFavoriteCount -= 1;
+      image.imageData.favoriteCount -= 1
+      console.log("image.imageData.favoriteCount", image.imageData.favoriteCount)
+      console.log("image.imageData.oldFavoriteCount", image.imageData.oldFavoriteCount)
+
+    } else {
+      image.imageData.favoriteCount = 0
+      image.imageData.oldFavoriteCount = null;
+    }
+  
+    
+    updates['/images/' + image.imageKey + "/oldFavoriteCount"] = image.imageData.oldFavoriteCount;
+    updates['/images/' + image.imageKey + "/favoriteCount"] = image.imageData.favoriteCount;
+    // updates['/favorites/' + uid + "/" + image.imageKey] = image.imageData;
+    firebase.database().ref('favorites/' + uid + '/' + image.imageKey).remove()
+
+    return firebase.database().ref().update(updates);
+    
   }
   
   removeImage(arr, key) {
@@ -156,9 +161,8 @@ handleRemoveFavoriteClicked(image) {
     // _.update(this.all, 'a[0].b.c', function(n) { return n * n; });
   }
   
-  
-  // NEXT THREE FUNCTIONS IMPLEMENT AN OBSERVALE/SUBJECT
-  // REF: http://jasonwatmore.com/post/2016/12/01/angular-2-communicating-between-components-with-observable-subject
+      // NEXT THREE FUNCTIONS IMPLEMENT AN OBSERVALE/SUBJECT
+      // REF: http://jasonwatmore.com/post/2016/12/01/angular-2-communicating-between-components-with-observable-subject
   setFavoriteUpdate(key) {
     // sendMessage(message: string) {
     this.subject.next({ text: key });
@@ -171,6 +175,102 @@ handleRemoveFavoriteClicked(image) {
   clearMessage() {
     this.subject.next();
   }
+  
+  
+  // FOLLOW
+  handleFollowUser(user){
+    const uid = firebase.auth().currentUser.uid;
+    
+    const updates = {}       
+    updates['/following/' + uid + "/" + user.uid] = true;
+
+    return firebase.database().ref().update(updates);
+
+  }
+
+  handleRemoveFollowedUser(user) {
+    const uid = firebase.auth().currentUser.uid;
+    
+    const updates = {}       
+    
+    firebase.database().ref('following/' + uid + '/' + user.uid).remove()
+
+    return firebase.database().ref().update(updates);
+    
+  }
+  
+  updateFollowedInPosts(followedUid, postArray, add){
+    _.forEach(postArray, post => {
+        console.log("post", post)
+        console.log("post uid", post.data.upLoadedBy.uid)
+        console.log("followedUid", followedUid)
+
+        console.log("post follow", post.followed)
+
+          if (followedUid == post.data.upLoadedBy.uid && add) {
+            post.followed = true
+          }
+          if (followedUid == post.data.upLoadedBy.uid && !add) {
+            post.followed = null
+          }     
+          
+        console.log("postArray", postArray)      
+      })
+      
+    }
+
+  
+  updateFollowedInPostsx(followedUid, postArray, add){
+    console.log("followedUid", followedUid)
+    const uid = firebase.auth().currentUser.uid
+    const followUserRef = firebase.database().ref('following/' + uid)
+    
+    followUserRef.once('value', data => {
+      const otherUsersUids = _.keys(data.val())
+      console.log("otherUsersUids", otherUsersUids)
+      _.forEach(otherUsersUids, uid => {
+        console.log("uid", uid)
+        _.forEach(postArray, post => {
+          console.log("post", post)
+          console.log("post uid", post.data.upLoadedBy.uid)
+          console.log("followedUid", followedUid)
+
+          console.log("post follow", post.followed)
+          if (add) {
+            if (followedUid == post.data.upLoadedBy.uid) {
+              post.followed = true
+            } 
+          } else {
+            if (followedUid == post.data.upLoadedBy.uid) {
+              post.followed = null
+            }             
+          }
+          
+        })
+        console.log("postArray", postArray)
+      })
+      
+      // this.getOtherUsersPosts(otherUsersUids);
+    })
+    
+    
+    // _.forEach(this.refArray, ref => {
+    //   if (ref && typeof(ref)==='object') {
+    //   ref.off();
+    // }
+    
+  }
+  
+  setFollowUpdate(key) {
+    // sendMessage(message: string) {
+    this.subject.next({ text: key });
+  }
+  
+  getFollowUpdate(): Observable<any> {
+    return this.subject.asObservable();
+  }
+
+
 
 
 }

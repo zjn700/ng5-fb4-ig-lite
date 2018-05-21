@@ -7,20 +7,21 @@
             <div class="image-container">
 
                 <app-post *ngFor="let post of all"
+                           [post]="post"
                            [imageKey]="post.key"
                            [displayPostedBy]="displayPostedBy"
                            [displayImage]="displayImage"
-                           (removeFavoriteClicked)="onRemoveFavoritesClicked($event)">
+                           (removeFavoriteClicked)="onRemoveFavoriteClicked($event)">
                 </app-post>
         
                 <!--<app-post *ngFor="let post of all"-->
                 <!--          [imageKey]="post.data.imageKey"-->
                 <!--          [displayPostedBy] = "displayPostedBy"-->
-                <!--          [displayFavoritesButton] = "displayFavoritesButton"-->
+                <!--          [displayFavoriteButton] = "displayFavoriteButton"-->
                 <!--          [displayFollowButton] = "displayFollowButton"-->
-                <!--          (favoriteClicked)="onFavoritesClicked($event)"-->
-                <!--          (removeFavoriteClicked)="onRemoveFavoritesClicked($event)">-->
-                <!--          (followClicked)="onFollowClicked($event)"-->
+                <!--          (favoriteClicked)="onFavoriteClicked($event)"-->
+                <!--          (removeFavoriteClicked)="onRemoveFavoriteClicked($event)">-->
+                <!--          (followUser)="onFollowUser($event)"-->
                 <!-->-->
                 <!--</app-post>-->
             </div>

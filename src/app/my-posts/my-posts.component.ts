@@ -16,7 +16,7 @@ export class MyPostsComponent implements OnInit, OnDestroy {
   personalPostRef: any;
   postLists: any = [];
   displayPostedBy: boolean = false;
-  displayFavoritesButton: boolean = false;
+  displayFavoriteButton: boolean = false;
   displayFollowButton: boolean = false;
 
   constructor(private notificationService: NotificationService,
