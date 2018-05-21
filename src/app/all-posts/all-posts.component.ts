@@ -2,7 +2,9 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router'
 import * as firebase from "firebase";
 import * as _ from "lodash";
+import * as $ from "jquery";
 import { MyFireService } from "../shared/my-fire.service";
+import { UserService } from "../shared/user.service";
 import { NotificationService } from "../shared/notification.service"
 import { Observable } from 'rxjs';
 
@@ -30,6 +32,7 @@ export class AllPostsComponent implements OnInit, OnDestroy {
   
   constructor(private myFireService: MyFireService, 
               private notificationService: NotificationService,
+              private userService: UserService,
               private router: Router) { }
   
   ngOnDestroy(){
@@ -41,36 +44,66 @@ export class AllPostsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    // let uid = this.myFireService.getUsersFollowed(this.userService.getUser().uid)
+    const uid = firebase.auth().currentUser.uid
+    console.log("============")
+    console.log("uid", uid)
+
     
+    // let followedUsers2 = []
+    const followedUsers = this.myFireService.getFollowedUserArray(uid)
+    console.log("followedUsers2", followedUsers)
+    
+    // const followedRef = this.myFireService.getUsersFollowed(uid)
+    // let followedUsers = []
+    // console.log("============")
+    // followedRef.once('value', data => {
+    //   console.log("data val", data.val())
+    //   $.each(data.val(), function(k, v) {
+    //     //display the key and value pair
+    //     console.log(k + ' is ' + v);
+    //     followedUsers.push({
+    //       uid: k,
+    //       name: v
+    //     })
+    //   });
+
+    // })
+    // console.log("followedUsers", followedUsers)
+
+        console.log("============")
+
     this.allRef = firebase.database().ref('allposts').limitToFirst(this.maxPerLoad);
     
     this.allRef.on('child_added', data => {
       this.all.push({
         key: data.val().imageKey,
         data: data.val(),
-        followed: null
+        followed: this.myFireService.checkUidAgainstFollowedUsers(data.val().upLoadedBy.uid, followedUsers)
       });
       this.totalImagesLoaded += 1
+      console.log("this.all ========", this.all)
       
       console.log("data", data)
       console.log("data.val", data.val())
-
+      
     });
 
-    const uid = firebase.auth().currentUser.uid
-
-    // this.followUserRef = firebase.database().ref('following/' + uid);
-
-    // this.followUserRef.on('child_removed', function(data) {
-    //   console.log("data remove", data.key)
-    // });
-    
-    // this.followUserRef.on('child_added', function(data) {
-    //   console.log("data add key", data.key)
-    //   this.router.navigate(['/following']);
-    // });
-
   }
+  
+  // checkUidAgainstFollowedUsers(uid, followedUserList) {
+  //   console.log("uid in checkUidAgainstFollowedUsers", uid)
+  //   let followed=null
+  //   _.forEach(followedUserList, post => {
+  //     console.log("post ---", post)
+  //     if (uid==post.uid) {
+  //       followed = post.name
+  //     }
+  //   })
+  //   console.log("followed +++++", followed)
+  //   return followed;
+  // }
+  
   
   onLoadMore() {
     
@@ -80,9 +113,11 @@ export class AllPostsComponent implements OnInit, OnDestroy {
      }
 
     if (this.all.length > 0) {
-      
+      const uid = firebase.auth().currentUser.uid
+
       const lastLoadedPost = _.last(this.all);
       const lastLoadedPostKey = lastLoadedPost.key
+      const followedUsers = this.myFireService.getFollowedUserArray(uid)
 
       this.loadMoreRef = firebase.database().ref('allposts').startAt(null, lastLoadedPostKey).limitToFirst(this.maxPerLoad+1)
       this.loadMoreRef.on('child_added', data => {
@@ -92,7 +127,7 @@ export class AllPostsComponent implements OnInit, OnDestroy {
           this.all.push({
             key: data.val().imageKey,
             data: data.val(),
-            followed: null
+            followed: this.myFireService.checkUidAgainstFollowedUsers(data.val().upLoadedBy.uid, followedUsers)
           });
           this.totalImagesLoaded += 1
 
@@ -135,8 +170,9 @@ export class AllPostsComponent implements OnInit, OnDestroy {
     this.myFireService.handleRemoveFollowedUser(image.imageData.upLoadedBy)
       .then(data => {
         this.notificationService.display("info", "Unfollowed " + image.imageData.upLoadedBy.name)
-        this.myFireService.updateFollowedInPosts(image.imageData.upLoadedBy.uid, this.all, false)
-
+        this.updateFollowedInPosts(image.imageData.upLoadedBy.uid, this.all, false)
+        // this.myFireService.updateFollowedInPosts(image.imageData.upLoadedBy.uid, this.all, false)
+        // this.router.navigate(['/following']);
         this.myFireService.setFollowUpdate(image.imageData.upLoadedBy);
       })
       .catch(err => {
@@ -152,15 +188,15 @@ export class AllPostsComponent implements OnInit, OnDestroy {
     this.myFireService.handleFollowUser(image.imageData.upLoadedBy)
       .then(data => {
         this.notificationService.display("info", "Following " + image.imageData.upLoadedBy.name)
-        this.myFireService.updateFollowedInPosts(image.imageData.upLoadedBy.uid, this.all, true)
-        console.log("this.all", this.all)
+        this.updateFollowedInPosts(image.imageData.upLoadedBy.uid, this.all, true)
+        // this.myFireService.updateFollowedInPosts(image.imageData.upLoadedBy.uid, this.all, true)
         this.myFireService.setFollowUpdate(image.imageData.upLoadedBy);
         // this.switch = !this.switch
         // this.router.navigate(['/following']);
-        var newArray = this.all.slice();
-        console.log("newArray", newArray)
-        this.all = newArray.slice()
-        console.log("this.all", this.all)
+        // var newArray = this.all.slice();
+        // console.log("newArray", newArray)
+        // this.all = newArray.slice()
+        // console.log("this.all", this.all)
 
         
       })
@@ -169,5 +205,31 @@ export class AllPostsComponent implements OnInit, OnDestroy {
         this.notificationService.display("error", err.message)
       })
   }  
+
+  updateFollowedInPosts(followedUid, postArray, add){
+    console.log('##########################')
+    _.forEach(this.all, post => {
+        console.log("post in allposts", post)
+        console.log("post uid", post.data.upLoadedBy.uid)
+        console.log("followedUid", followedUid)
+
+        console.log("post follow", post.followed)
+
+          if (followedUid == post.data.upLoadedBy.uid && add) {
+            post.followed = post.data.upLoadedBy.name
+            this.displayFollowButton=false
+            // post.followed = true
+          }
+          if (followedUid == post.data.upLoadedBy.uid && !add) {
+            post.followed = null
+            this.displayFollowButton=true
+
+          }     
+          
+        console.log("postArray this-", this.all)      
+        // return postArray
+      })
+      
+    }
 
 }

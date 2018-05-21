@@ -7,6 +7,7 @@
         <app-post *ngFor="let post of postList"
                   [post]="post"
                   [imageKey]="post.data.imageKey"
+                  [displayPostedBy]="displayPostedBy"
                   [displayFavoriteButton]="false"
                   [inFollowing]="true"
                   (unfollowUser)="onRemoveFollowedUser($event)">

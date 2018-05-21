@@ -8,7 +8,7 @@
 
   <div class="text-section">
     <div class="text-section-row row0">
-      <span>{{imageData.name}} {{imageKey}} {{displayFavoriteButton}} </span>
+      <span>{{imageData.name}} {{imageKey}} pfval {{post.followed}} pfnotnll {{post.followed!=null}} notcuiu {{!curUserIsUploader}} exp {{post.followed!=null && !curUserIsUploader}}</span>
     </div>
  
     <div *ngIf="imageData.createdOn" class="text-section-row row1">
@@ -63,20 +63,26 @@
     </div>
 
     <!--<div class="text-section-row row5 action-row hvr-grow" *ngIf="post.followed==null && displayFollowButton && followedKey==null">-->
-    <div class="text-section-row row5 action-row hvr-grow" *ngIf="post.followed==null && displayFollowButton">
+    <!--<div class="text-section-row row5 action-row hvr-grow" -->
+    <!--     *ngIf="post.followed==null && displayFollowButton">-->
+    <div class="text-section-row row5 action-row hvr-grow" 
+         *ngIf="post.followed==null && !curUserIsUploader">      
       <span (click)="onFollowUser()">
         <!--<span class="glyphicon glyphicon-tags"></span>-->
         <!--<i class="fas fa-user-plus"></i>-->
         <i class="fas fa-user-friends"></i>
-        Follow User
+        Follow User {{post.followed==null}} {{!curUserIsUploader}}
       </span>
     </div>
     
-    <div class="text-section-row row5 action-row hvr-grow" *ngIf="(post.followed || !displayFollowButton && !curUserIsUploader) || uploadedBy==followedKey">
+    <!--<div class="text-section-row row5 action-row hvr-grow" -->
+    <!--     *ngIf="(post.followed!=null && !displayFollowButton && !curUserIsUploader) || uploadedBy==followedKey">-->
+    <div class="text-section-row row5 action-row hvr-grow" 
+         *ngIf="post.followed!=null && !curUserIsUploader">      
       <span (click)="onRemoveFollowedUser()">
         <!--<span class="glyphicon glyphicon-heart"></span>-->
         <i class="fas fa-user-minus"></i>
-        Stop Following User
+        Stop Following User {{post.followed}} {{post.followed==null}} {{!curUserIsUploader}}
       </span>
     </div>    
   </div>

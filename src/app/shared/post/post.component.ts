@@ -90,7 +90,7 @@ export class PostComponent implements OnInit, OnDestroy {
        this.defaultImage = this.imageData.fileUrl;
        this.curUserIsUploader = (uid == this.imageData.upLoadedBy.uid)
       if (this.inFollowing) {
-        this.curUserIsUploader=true
+        this.curUserIsUploader=false
       }
 
        // remove unique identifiers from the saved name for display only
@@ -130,6 +130,7 @@ export class PostComponent implements OnInit, OnDestroy {
         this.favoritedKey = this.imageKey;
         // this.displayUnfavoriteButton=true
         this.displayFavoriteButton = false;
+
 
         // this.myFireService.clearMessage()
         subscription.unsubscribe();

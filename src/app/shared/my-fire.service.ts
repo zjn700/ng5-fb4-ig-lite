@@ -4,6 +4,7 @@ import { UserService } from './user.service';
 import { Observable } from 'rxjs';
 import { Subject } from 'rxjs/Subject';
 import * as _ from "lodash";
+import * as $ from "jquery";
 
 @Injectable()
 export class MyFireService {
@@ -21,6 +22,10 @@ export class MyFireService {
   
   getUserPostRef(uid) {
     return firebase.database().ref('myposts').child(uid);
+  }
+  
+  getUsersFollowed(uid) {
+    return firebase.database().ref('following').child(uid);
   }
   
   
@@ -182,7 +187,8 @@ export class MyFireService {
     const uid = firebase.auth().currentUser.uid;
     
     const updates = {}       
-    updates['/following/' + uid + "/" + user.uid] = true;
+    updates['/following/' + uid + "/" + user.uid] = user.name;
+    // updates['/following/' + uid + "/" + user.uid] = true;
 
     return firebase.database().ref().update(updates);
 
@@ -215,10 +221,44 @@ export class MyFireService {
           }     
           
         console.log("postArray", postArray)      
+        // return postArray
       })
       
     }
 
+  getFollowedUserArray(uid) {
+    const followedRef = this.getUsersFollowed(uid)
+    
+    let followedUsers = new Array()
+    console.log("============")
+    followedRef.once('value', data => {
+      console.log("data val", data.val())
+      $.each(data.val(), function(k, v) {
+        //display the key and value pair
+        console.log(k + ' is ' + v);
+        followedUsers.push({
+          uid: k,
+          name: v
+        })
+      });
+      console.log("followedUsers xxxxx", followedUsers)
+    })
+    return followedUsers
+
+  }
+  
+  checkUidAgainstFollowedUsers(uid, followedUserList) {
+    console.log("uid in checkUidAgainstFollowedUsers", uid)
+    let followed=null
+    _.forEach(followedUserList, post => {
+       console.log("post ---", post)
+       if (uid==post.uid) {
+         followed = post.name
+       }
+    })
+    console.log("followed +++++", followed)
+    return followed;
+  }
   
   updateFollowedInPostsx(followedUid, postArray, add){
     console.log("followedUid", followedUid)

@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import * as firebase from "firebase";
 import * as _ from "lodash";
+import * as $ from "jquery"
 
 import { MyFireService } from '../shared/my-fire.service';
 import { NotificationService } from "../shared/notification.service"
@@ -14,6 +15,8 @@ export class FollowingComponent implements OnInit, OnDestroy {
   
   refArray: any = [];
   postList: any = [];
+  displayPostedBy: boolean = true;
+  displayImage = true;
 
   constructor(private myFireService: MyFireService,
               private notificationService: NotificationService) { }
@@ -44,20 +47,29 @@ export class FollowingComponent implements OnInit, OnDestroy {
     const followUserRef = firebase.database().ref('following/' + uid);
     
     followUserRef.once('value', data => {
+      
+      console.log("data val", data.val())
+      
       const otherUsersUids = _.keys(data.val())
       console.log("otherUsersUids", otherUsersUids)
-      this.getOtherUsersPosts(otherUsersUids);
+      this.getOtherUsersPosts(otherUsersUids, uid);
     }) 
   }
   
-  getOtherUsersPosts(uidList){
+  getOtherUsersPosts(uidList, uid){
+    const followedUsers = this.myFireService.getFollowedUserArray(uid)
+
     this.postList.length=0;
     for(let count=0; count < uidList.length; count++){
       this.refArray[count] = this.myFireService.getUserPostRef(uidList[count]);
       this.refArray[count].on('child_added', data => {
+        console.log("data", data, data.val())
+        console.log("uid list count", uidList[count])
+        console.log(this.myFireService.checkUidAgainstFollowedUsers(uidList[count], followedUsers))
         this.postList.push({
           key: data.key,
-          data: data.val()
+          data: data.val(),
+          followed: this.myFireService.checkUidAgainstFollowedUsers(uidList[count], followedUsers)
         })
       })
     }

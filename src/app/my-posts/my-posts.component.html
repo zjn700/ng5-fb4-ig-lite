@@ -21,6 +21,7 @@
       <div class="image-container">
         <app-post
           *ngFor="let post of postLists"
+          [post]="post"
           [imageKey]="post.data.imageKey"
           [displayFavoriteButton] = "displayFavoriteButton"
           [displayPostedBy] = "displayPostedBy"
