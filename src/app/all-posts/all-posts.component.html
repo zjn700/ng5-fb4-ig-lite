@@ -12,7 +12,7 @@
       <div class="card shadow" *ngIf="!endOfAllposts">
         <div class="card-body">         
             <div class="file d-block btn-shadow">
-              <button class="btn btn-info p-2 " (click)="onLoadMore()">Load More Images</button>
+              <button class="btn btn-info p-2 " [ngClass]="{'disabled': disableLoadMore}" (click)="onLoadMore()">Load More Images</button>
             </div>
             <!--<img class="card-img-top" src="{{image}}" alt="Card image">-->
          </div>
@@ -38,6 +38,7 @@
       <div class="image-container">
         <app-post *ngFor="let post of all"
                   [post]="post"
+                  [postFollowed]="post.followed"
                   [imageKey]="post.data.imageKey"
                   [uploadedBy]="post.data.upLoadedBy.uid"
                   [displayPostedBy] = "displayPostedBy"

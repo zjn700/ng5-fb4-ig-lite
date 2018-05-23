@@ -8,7 +8,7 @@
 
   <div class="text-section">
     <div class="text-section-row row0">
-      <span>{{imageData.name}} {{imageKey}} pfval {{post.followed}} pfnotnll {{post.followed!=null}} notcuiu {{!curUserIsUploader}} exp {{post.followed!=null && !curUserIsUploader}}</span>
+      <span>{{imageData.name}} {{imageKey}} pfval {{postFollowed}} pfnotnll {{postFollowed!=null}} notcuiu {{!curUserIsUploader}} exp {{postFollowed!=null && !curUserIsUploader}}</span>
     </div>
  
     <div *ngIf="imageData.createdOn" class="text-section-row row1">
@@ -65,8 +65,10 @@
     <!--<div class="text-section-row row5 action-row hvr-grow" *ngIf="post.followed==null && displayFollowButton && followedKey==null">-->
     <!--<div class="text-section-row row5 action-row hvr-grow" -->
     <!--     *ngIf="post.followed==null && displayFollowButton">-->
+    <!--<div class="text-section-row row5 action-row hvr-grow" -->
+    <!--     *ngIf="post.followed==null && !curUserIsUploader">      -->
     <div class="text-section-row row5 action-row hvr-grow" 
-         *ngIf="post.followed==null && !curUserIsUploader">      
+         *ngIf="(postFollowed==null) && !curUserIsUploader">   
       <span (click)="onFollowUser()">
         <!--<span class="glyphicon glyphicon-tags"></span>-->
         <!--<i class="fas fa-user-plus"></i>-->
@@ -77,8 +79,10 @@
     
     <!--<div class="text-section-row row5 action-row hvr-grow" -->
     <!--     *ngIf="(post.followed!=null && !displayFollowButton && !curUserIsUploader) || uploadedBy==followedKey">-->
+    <!--<div class="text-section-row row5 action-row hvr-grow" -->
+    <!--     *ngIf="post.followed!=null && !curUserIsUploader">      -->
     <div class="text-section-row row5 action-row hvr-grow" 
-         *ngIf="post.followed!=null && !curUserIsUploader">      
+         *ngIf="(postFollowed!=null) && !curUserIsUploader">  
       <span (click)="onRemoveFollowedUser()">
         <!--<span class="glyphicon glyphicon-heart"></span>-->
         <i class="fas fa-user-minus"></i>

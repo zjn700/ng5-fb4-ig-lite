@@ -22,12 +22,12 @@ export class SignUpComponent implements OnInit {
     const email = form.value.email;
     const password = form.value.password;
     
-    console.log(fullname, email, password)
+    //console.log(fullname, email, password)
     
     firebase.auth().createUserWithEmailAndPassword(email, password)
       .then(userData => {
         userData.sendEmailVerification();
-        console.log(userData);
+        //console.log(userData);
         const message = `A verification email was sent to ${email}`;
         
         this.notificationService.display('success', message )

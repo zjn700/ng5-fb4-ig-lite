@@ -19,10 +19,11 @@ export class AllPostsComponent implements OnInit, OnDestroy {
   loadMoreRef: any;
   followUserRef: any;
   totalImagesLoaded = 0;
-  private maxPerLoad: number = 4
+  private maxPerLoad: number = 12
   
   // @Output() favoriteCountChanged = new EventEmitter<any>();
   // switch: boolean = false;
+  disableLoadMore: boolean = false
   displayPostedBy: boolean = true;
   displayFavoriteButton: boolean = true;
   displayFollowButton: boolean = true;  
@@ -46,22 +47,22 @@ export class AllPostsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     // let uid = this.myFireService.getUsersFollowed(this.userService.getUser().uid)
     const uid = firebase.auth().currentUser.uid
-    console.log("============")
-    console.log("uid", uid)
+    //console.log("============")
+    //console.log("uid", uid)
 
     
     // let followedUsers2 = []
     const followedUsers = this.myFireService.getFollowedUserArray(uid)
-    console.log("followedUsers2", followedUsers)
+    //console.log("followedUsers2", followedUsers)
     
     // const followedRef = this.myFireService.getUsersFollowed(uid)
     // let followedUsers = []
-    // console.log("============")
+    // //console.log("============")
     // followedRef.once('value', data => {
-    //   console.log("data val", data.val())
+    //   //console.log("data val", data.val())
     //   $.each(data.val(), function(k, v) {
     //     //display the key and value pair
-    //     console.log(k + ' is ' + v);
+    //     //console.log(k + ' is ' + v);
     //     followedUsers.push({
     //       uid: k,
     //       name: v
@@ -69,9 +70,9 @@ export class AllPostsComponent implements OnInit, OnDestroy {
     //   });
 
     // })
-    // console.log("followedUsers", followedUsers)
+    // //console.log("followedUsers", followedUsers)
 
-        console.log("============")
+        //console.log("============")
 
     this.allRef = firebase.database().ref('allposts').limitToFirst(this.maxPerLoad);
     
@@ -82,60 +83,66 @@ export class AllPostsComponent implements OnInit, OnDestroy {
         followed: this.myFireService.checkUidAgainstFollowedUsers(data.val().upLoadedBy.uid, followedUsers)
       });
       this.totalImagesLoaded += 1
-      console.log("this.all ========", this.all)
+      //console.log("this.all ========", this.all)
       
-      console.log("data", data)
-      console.log("data.val", data.val())
+      //console.log("data", data)
+      //console.log("data.val", data.val())
       
     });
 
   }
   
   // checkUidAgainstFollowedUsers(uid, followedUserList) {
-  //   console.log("uid in checkUidAgainstFollowedUsers", uid)
+  //   //console.log("uid in checkUidAgainstFollowedUsers", uid)
   //   let followed=null
   //   _.forEach(followedUserList, post => {
-  //     console.log("post ---", post)
+  //     //console.log("post ---", post)
   //     if (uid==post.uid) {
   //       followed = post.name
   //     }
   //   })
-  //   console.log("followed +++++", followed)
+  //   //console.log("followed +++++", followed)
   //   return followed;
   // }
   
   
   onLoadMore() {
-    
-     this.endOfAllposts = (this.totalImagesLoaded % this.maxPerLoad != 0)
-     if (this.endOfAllposts) {
-        this.notificationService.display("info", "There are no more posts")
+    // if (this.disableLoadMore) {
+      
+    // } else {
+      // this.disableLoadMore = true
+       this.endOfAllposts = (this.totalImagesLoaded % this.maxPerLoad != 0)
+       if (this.endOfAllposts) {
+          this.notificationService.display("info", "There are no more posts")
+       }
+  
+       if (this.all.length > 0) {
+        const uid = firebase.auth().currentUser.uid
+  
+        const lastLoadedPost = _.last(this.all);
+        const lastLoadedPostKey = lastLoadedPost.key
+        const followedUsers = this.myFireService.getFollowedUserArray(uid)
+  
+        this.loadMoreRef = firebase.database().ref('allposts').startAt(null, lastLoadedPostKey).limitToFirst(this.maxPerLoad+1)
+        this.loadMoreRef.on('child_added', data => {
+          //console.log("data.val().key)", data.val(), data.val().imageKey)
+          if (data.val().imageKey === lastLoadedPostKey) {
+            return;
+          } else {
+            this.all.push({
+              key: data.val().imageKey,
+              data: data.val(),
+              followed: this.myFireService.checkUidAgainstFollowedUsers(data.val().upLoadedBy.uid, followedUsers)
+            });
+            this.totalImagesLoaded += 1
+            // this.disableLoadMore= false;
+  
+          }
+           
+        })
+        //console.log("this.al load morel", this.all)
      }
-
-    if (this.all.length > 0) {
-      const uid = firebase.auth().currentUser.uid
-
-      const lastLoadedPost = _.last(this.all);
-      const lastLoadedPostKey = lastLoadedPost.key
-      const followedUsers = this.myFireService.getFollowedUserArray(uid)
-
-      this.loadMoreRef = firebase.database().ref('allposts').startAt(null, lastLoadedPostKey).limitToFirst(this.maxPerLoad+1)
-      this.loadMoreRef.on('child_added', data => {
-        if (data.val().imageKey === lastLoadedPostKey) {
-          return;
-        } else {
-          this.all.push({
-            key: data.val().imageKey,
-            data: data.val(),
-            followed: this.myFireService.checkUidAgainstFollowedUsers(data.val().upLoadedBy.uid, followedUsers)
-          });
-          this.totalImagesLoaded += 1
-
-        }
-         
-      })
-
-    }
+    // }
     
   }
   
@@ -169,7 +176,7 @@ export class AllPostsComponent implements OnInit, OnDestroy {
   onRemoveFollowedUser(image) {
     this.myFireService.handleRemoveFollowedUser(image.imageData.upLoadedBy)
       .then(data => {
-        this.notificationService.display("info", "Unfollowed " + image.imageData.upLoadedBy.name)
+        this.notificationService.display("info",  "You have unfollowed " + image.imageData.upLoadedBy.name)
         this.updateFollowedInPosts(image.imageData.upLoadedBy.uid, this.all, false)
         // this.myFireService.updateFollowedInPosts(image.imageData.upLoadedBy.uid, this.all, false)
         // this.router.navigate(['/following']);
@@ -183,8 +190,8 @@ export class AllPostsComponent implements OnInit, OnDestroy {
   }
   
   onFollowUser(image){
-    // console.log("imageData", image.imageData)
-    // console.log("imageData.upLoadedBy", image.imageData.upLoadedBy)
+    // //console.log("imageData", image.imageData)
+    // //console.log("imageData.upLoadedBy", image.imageData.upLoadedBy)
     this.myFireService.handleFollowUser(image.imageData.upLoadedBy)
       .then(data => {
         this.notificationService.display("info", "Following " + image.imageData.upLoadedBy.name)
@@ -194,9 +201,9 @@ export class AllPostsComponent implements OnInit, OnDestroy {
         // this.switch = !this.switch
         // this.router.navigate(['/following']);
         // var newArray = this.all.slice();
-        // console.log("newArray", newArray)
+        // //console.log("newArray", newArray)
         // this.all = newArray.slice()
-        // console.log("this.all", this.all)
+        // //console.log("this.all", this.all)
 
         
       })
@@ -207,13 +214,13 @@ export class AllPostsComponent implements OnInit, OnDestroy {
   }  
 
   updateFollowedInPosts(followedUid, postArray, add){
-    console.log('##########################')
+    //console.log('##########################')
     _.forEach(this.all, post => {
-        console.log("post in allposts", post)
-        console.log("post uid", post.data.upLoadedBy.uid)
-        console.log("followedUid", followedUid)
+        //console.log("post in allposts", post)
+        //console.log("post uid", post.data.upLoadedBy.uid)
+        //console.log("followedUid", followedUid)
 
-        console.log("post follow", post.followed)
+        //console.log("post follow", post.followed)
 
           if (followedUid == post.data.upLoadedBy.uid && add) {
             post.followed = post.data.upLoadedBy.name
@@ -226,7 +233,7 @@ export class AllPostsComponent implements OnInit, OnDestroy {
 
           }     
           
-        console.log("postArray this-", this.all)      
+        //console.log("postArray this-", this.all)      
         // return postArray
       })
       

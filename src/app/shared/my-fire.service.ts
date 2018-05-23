@@ -28,6 +28,23 @@ export class MyFireService {
     return firebase.database().ref('following').child(uid);
   }
   
+  verifyUserIsFollowed(uid, uploadedBy) {
+    console.log("in verifyUserIsFollowed", uid, uploadedBy)
+
+    return firebase.database().ref('following/' + uid + '/' + uploadedBy)
+      .once('value')
+      .then(snapshot => {
+        let userFollowed
+        console.log("snapshot.val in fireb service", snapshot.val(), snapshot.key)
+        if (snapshot.val()){
+          userFollowed = snapshot.val()
+        } else {
+          userFollowed = null
+        }
+        return userFollowed
+      });
+      
+  }
   
   // FILE UPLOAD
   uploadFile(file) {
@@ -65,7 +82,7 @@ export class MyFireService {
   
   handleImageUpload(data) {
     const user = this.userService.getUser();
-    console.log('user', user);
+    //console.log('user', user);
     
     const imageKey = firebase.database().ref('images').push().key;
     const imageDetails = {
@@ -113,8 +130,8 @@ export class MyFireService {
     if (image.imageData.favoriteCount) {
       image.imageData.oldFavoriteCount = image.imageData.favoriteCount;
       image.imageData.favoriteCount += 1
-      console.log("image.imageData.favoriteCount", image.imageData.favoriteCount)
-      console.log("image.imageData.oldFavoriteCount", image.imageData.oldFavoriteCount)
+      //console.log("image.imageData.favoriteCount", image.imageData.favoriteCount)
+      //console.log("image.imageData.oldFavoriteCount", image.imageData.oldFavoriteCount)
 
     } else {
       image.imageData.favoriteCount = 1
@@ -138,8 +155,8 @@ export class MyFireService {
     if (image.imageData.favoriteCount > 1) {
       image.imageData.oldFavoriteCount -= 1;
       image.imageData.favoriteCount -= 1
-      console.log("image.imageData.favoriteCount", image.imageData.favoriteCount)
-      console.log("image.imageData.oldFavoriteCount", image.imageData.oldFavoriteCount)
+      //console.log("image.imageData.favoriteCount", image.imageData.favoriteCount)
+      //console.log("image.imageData.oldFavoriteCount", image.imageData.oldFavoriteCount)
 
     } else {
       image.imageData.favoriteCount = 0
@@ -157,9 +174,9 @@ export class MyFireService {
   }
   
   removeImage(arr, key) {
-    console.log("remove image")
+    //console.log("remove image")
     let index = _.findIndex(arr, {key: key});
-    console.log("remove index", index);
+    //console.log("remove index", index);
     arr.splice(index, 1);
     return arr
 
@@ -207,11 +224,11 @@ export class MyFireService {
   
   updateFollowedInPosts(followedUid, postArray, add){
     _.forEach(postArray, post => {
-        console.log("post", post)
-        console.log("post uid", post.data.upLoadedBy.uid)
-        console.log("followedUid", followedUid)
+        //console.log("post", post)
+        //console.log("post uid", post.data.upLoadedBy.uid)
+        //console.log("followedUid", followedUid)
 
-        console.log("post follow", post.followed)
+        //console.log("post follow", post.followed)
 
           if (followedUid == post.data.upLoadedBy.uid && add) {
             post.followed = true
@@ -220,7 +237,7 @@ export class MyFireService {
             post.followed = null
           }     
           
-        console.log("postArray", postArray)      
+        //console.log("postArray", postArray)      
         // return postArray
       })
       
@@ -228,54 +245,118 @@ export class MyFireService {
 
   getFollowedUserArray(uid) {
     const followedRef = this.getUsersFollowed(uid)
-    
-    let followedUsers = new Array()
-    console.log("============")
+    //console.log("followedRef=====", followedRef)
+    // let followedUsers = new Array()
+    let followedUsers = []
+    //console.log("============")
     followedRef.once('value', data => {
-      console.log("data val", data.val())
+      //console.log("data val", data.val())
       $.each(data.val(), function(k, v) {
         //display the key and value pair
-        console.log(k + ' is ' + v);
+        //console.log(k + ' is ' + v);
         followedUsers.push({
           uid: k,
           name: v
         })
       });
-      console.log("followedUsers xxxxx", followedUsers)
+      //console.log("followedUsers xxxxx", followedUsers)
     })
+    if (followedUsers.length==0) { 
+      console.log("OOPSSSSSSSSSSS", followedUsers, followedUsers.length) 
+    }
     return followedUsers
 
   }
   
+  getFollowedUserArrayPromise(uid) {
+    return new Promise((resolve, reject) => {
+      const followedRef = this.getUsersFollowed(uid)
+      console.log("followedRef=====", followedRef)
+      let followedUsers = new Array()
+      // let followedUsers = []
+      //console.log("============")
+      followedRef.once('value', data => {
+        //console.log("data val", data.val())
+        $.each(data.val(), function(k, v) {
+          //display the key and value pair
+          //console.log(k + ' is ' + v);
+          followedUsers.push({
+            uid: k,
+            name: v
+          })
+        });
+      })
+      resolve(followedUsers); // pass values
+    });
+  }
+
+  
+  // checkUidAgainstFollowedUsersx(uid, followedUserList) {
+  //   //console.log("uid in checkUidAgainstFollowedUsers", uid)
+  //   let followed=null
+  //   _.forEach(followedUserList, post => {
+  //     //console.log("post ---", post)
+  //     if (uid==post.uid) {
+  //       followed = post.name
+  //     }
+  //   })
+  //   //console.log("followed +++++", followed)
+  //   return followed;
+  // }
+  
+  checkUidAgainstFollowedUsersPromise(uid, followedUserList) {
+    return new Promise((resolve, reject) => {
+    setTimeout(()=>{
+        console.log("waitng")
+        console.log("checkUidAgainstFollowedUsers", "uid", uid , "list length", followedUserList.length,"followedlist", followedUserList)
+        let followed=null
+        for (let i=0; i < followedUserList.length; i++) {
+           console.log("uids", uid, followedUserList[i].uid, (uid===followedUserList[i].uid))
+           if (uid===followedUserList[i].uid) {
+             followed = followedUserList[i].name
+             console.log('++++++ before break', followed)
+             break;
+           }
+        }
+        console.log("resolve follow", followed)
+        resolve(followed);
+      }, 500)      
+    });
+  } 
+  
   checkUidAgainstFollowedUsers(uid, followedUserList) {
-    console.log("uid in checkUidAgainstFollowedUsers", uid)
-    let followed=null
-    _.forEach(followedUserList, post => {
-       console.log("post ---", post)
-       if (uid==post.uid) {
-         followed = post.name
-       }
-    })
-    console.log("followed +++++", followed)
-    return followed;
+    // setTimeout(()=>{
+      console.log("waitng")
+      console.log("checkUidAgainstFollowedUsers", "uid", uid , "list length", followedUserList.length,"followedlist", followedUserList)
+      let followed=null
+      for (let i=0; i < followedUserList.length; i++) {
+         console.log("uids", uid, followedUserList[i].uid, (uid===followedUserList[i].uid))
+         if (uid===followedUserList[i].uid) {
+           followed = followedUserList[i].name
+           console.log('++++++ before break', followed)
+           break;
+         }
+      }
+      return followed;
+    // }, 500)
   }
   
   updateFollowedInPostsx(followedUid, postArray, add){
-    console.log("followedUid", followedUid)
+    //console.log("followedUid", followedUid)
     const uid = firebase.auth().currentUser.uid
     const followUserRef = firebase.database().ref('following/' + uid)
     
     followUserRef.once('value', data => {
       const otherUsersUids = _.keys(data.val())
-      console.log("otherUsersUids", otherUsersUids)
+      //console.log("otherUsersUids", otherUsersUids)
       _.forEach(otherUsersUids, uid => {
-        console.log("uid", uid)
+        //console.log("uid", uid)
         _.forEach(postArray, post => {
-          console.log("post", post)
-          console.log("post uid", post.data.upLoadedBy.uid)
-          console.log("followedUid", followedUid)
+          //console.log("post", post)
+          //console.log("post uid", post.data.upLoadedBy.uid)
+          //console.log("followedUid", followedUid)
 
-          console.log("post follow", post.followed)
+          //console.log("post follow", post.followed)
           if (add) {
             if (followedUid == post.data.upLoadedBy.uid) {
               post.followed = true
@@ -287,7 +368,7 @@ export class MyFireService {
           }
           
         })
-        console.log("postArray", postArray)
+        //console.log("postArray", postArray)
       })
       
       // this.getOtherUsersPosts(otherUsersUids);

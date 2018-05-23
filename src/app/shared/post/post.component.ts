@@ -10,13 +10,14 @@ import { MyFireService } from '../my-fire.service'
 })
 export class PostComponent implements OnInit, OnDestroy {
   
-  @Input() post: string;
+  @Input() post;
   @Input() imageKey: string;
   @Input() uploadedBy: string;
   @Input() displayImage: boolean = true;
   @Input() displayPostedBy: boolean;
   @Input() displayFavoriteButton: boolean;
-  // @Input() displayUnfavoriteButton: boolean;
+
+
   @Input() showThis:boolean = false;
   @Input() displayFollowButton: boolean;
   @Input() newFollowedUser: string;
@@ -24,6 +25,8 @@ export class PostComponent implements OnInit, OnDestroy {
   @Input() inFollowing: boolean = false;
   
   @Input() curUserIsUploader: boolean;
+  
+  @Input() postFollowed=null;
   
   defaultImage: string = "assets/images/150x150.png";
   imageName: string = "";
@@ -46,42 +49,41 @@ export class PostComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    
     const uid = firebase.auth().currentUser.uid
     
-    firebase.database().ref('following/' + uid + '/' + this.uploadedBy)
-      .once('value')
-      .then(snapshot => {
-        console.log("snapshot.val", snapshot.val())
-        if (snapshot.val()){
-          this.displayFollowButton = !snapshot.val()
-        }
-      });
-
     
-    // firebase.database().ref('favorites').child(uid)
+    // this.myFireService.verifyUserIsFollowed(uid, this.uploadedBy)
+    //   .then(data => {
+    //     console.log("data", data)
+    //     if (data){
+    //       this.postFollowed = data
+    //     } else {
+    //       this.postFollowed = null
+    //     }
+        
+    //   })
+    console.log("================" )
+    
+    // firebase.database().ref('following/' + uid + '/' + this.uploadedBy)
+    //   .once('value')
+    //   .then(snapshot => {
+    //     console.log("snapshot.val in post", snapshot.val(), snapshot.key)
+    //     if (snapshot.val()){
+    //       // this.displayFollowButton = !snapshot.val()
+    //       this.postFollowed = snapshot.val()
+    //     } else {
+    //       this.postFollowed = null
+    //     }
+    //   });
+    
     firebase.database().ref('favorites/' + uid + '/' + this.imageKey)
       .once('value')
       .then(snapshot => {
         if (snapshot.val()){
-          // console.log("this.imageKey", this.imageKey )
-          // console.log('key snapshot', snapshot.key)          
-          // console.log('fav snapshot', snapshot.val().favoriteCount)
           this.displayFavoriteButton = (this.imageKey != snapshot.key)
-          // this.displayUnfavoriteButton = (this.imageKey == snapshot.key)
         } 
-        // else {
-        //   console.log('not favorited')
-        // }
       });
-      // , error => {
-      //     if (error) {
-      //       // The write failed...
-      //     } else {
-      //       console.log("no error")
-      //       // Data saved successfully!
-      //     }
-      // })
-
     
     firebase.database().ref('images').child(this.imageKey)
      .once('value')
@@ -91,6 +93,8 @@ export class PostComponent implements OnInit, OnDestroy {
        this.curUserIsUploader = (uid == this.imageData.upLoadedBy.uid)
       if (this.inFollowing) {
         this.curUserIsUploader=false
+        this.postFollowed =true
+        
       }
 
        // remove unique identifiers from the saved name for display only
@@ -115,8 +119,6 @@ export class PostComponent implements OnInit, OnDestroy {
       .subscribe(message => { 
         this.favoritedKey = null;
         this.displayFavoriteButton = true;
-        // this.displayUnfavoriteButton=false
-
         // this.myFireService.clearMessage()
         subscription.unsubscribe();
       });  
@@ -128,10 +130,7 @@ export class PostComponent implements OnInit, OnDestroy {
     const subscription = this.myFireService.getFavoriteUpdate()
       .subscribe(message => { 
         this.favoritedKey = this.imageKey;
-        // this.displayUnfavoriteButton=true
         this.displayFavoriteButton = false;
-
-
         // this.myFireService.clearMessage()
         subscription.unsubscribe();
       });       
@@ -144,9 +143,9 @@ export class PostComponent implements OnInit, OnDestroy {
    this.unfollowUser.emit({imageKey:this.imageKey, imageData:this.imageData})
    const subscription = this.myFireService.getFollowUpdate()
       .subscribe(message => { 
+        this.postFollowed = null
         this.followedKey = null;
         this.displayFollowButton = true
-        console.log()
         // this.myFireService.clearMessage()
         subscription.unsubscribe();
       });  
@@ -157,9 +156,9 @@ export class PostComponent implements OnInit, OnDestroy {
     this.followUser.emit({imageKey:this.imageKey, imageData:this.imageData})
     const subscription = this.myFireService.getFollowUpdate()
       .subscribe(message => { 
+        this.postFollowed = message.text.name
         this.followedKey = message.text.uid;
         this.displayFollowButton = false
-
         // this.myFireService.clearMessage()
         subscription.unsubscribe();
       });       
@@ -169,6 +168,24 @@ export class PostComponent implements OnInit, OnDestroy {
   
 }
 
+        
+      //     this.displayFavoriteButton = (this.imageKey != snapshot.key)
+      //   } 
+      // });
+      // , error => {
+      //     if (error) {
+      //       // The write failed...
+      //     } else {
+      //       console.log("no error")
+      //       // Data saved successfully!
+      //     }
+      // })
+
+
+
+    // console.log("this.imageKey", this.imageKey )
+          // console.log('key snapshot', snapshot.key)          
+          // console.log('fav snapshot', snapshot.val().favoriteCount)
 
       // console.log('this.imageData', this.imageData)
       // const uid = firebase.auth().currentUser.uid

@@ -39,7 +39,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     // the way recommended in the course with EventEmitter:
     const $user = this.userService.statusChange
       .subscribe(user=>{
-        console.log("statusChange", user);
+        //console.log("statusChange", user);
         if (user) {
           this.name= user.name;
           // this.router.navigate(['/myposts'])
@@ -56,7 +56,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
         // .takeWhile(() => this.alive)
         .subscribe((userData)=>{
           this.name = userData.name;
-          console.log("fb-au-st-ch")
+          //console.log("fb-au-st-ch")
           $profile.unsubscribe()
         })
        

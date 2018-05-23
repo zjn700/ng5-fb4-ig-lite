@@ -23,6 +23,7 @@ import { NotificationService } from './shared/notification.service';
 import { MyFireService } from './shared/my-fire.service';
 import { UserService } from './shared/user.service';
 import { PostComponent } from './shared/post/post.component';
+import { UtilityService } from './shared/utility.service';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,7 @@ import { PostComponent } from './shared/post/post.component';
     AppRoutingModule,
     FormsModule
   ],
-  providers: [RouteGuard, NotificationService, MyFireService, UserService],
+  providers: [RouteGuard, NotificationService, MyFireService, UserService, UtilityService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

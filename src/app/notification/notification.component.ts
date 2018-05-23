@@ -20,7 +20,7 @@ export class NotificationComponent implements OnInit {
       data=>{
         this.type = data.type,
         this.message = data.message
-        console.log("notsvc")
+        //console.log("notsvc")
         this.reset()
       })
       
@@ -28,7 +28,7 @@ export class NotificationComponent implements OnInit {
       data=>{
         this.load = data.load,
         this.message = data.message;
-        console.log("loader")
+        //console.log("loader")
       })
     
     

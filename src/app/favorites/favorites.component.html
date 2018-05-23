@@ -8,10 +8,13 @@
 
                 <app-post *ngFor="let post of all"
                            [post]="post"
+                           [postFollowed]="post.followed"
                            [imageKey]="post.key"
                            [displayPostedBy]="displayPostedBy"
                            [displayImage]="displayImage"
-                           (removeFavoriteClicked)="onRemoveFavoriteClicked($event)">
+                           (removeFavoriteClicked)="onRemoveFavoriteClicked($event)"
+                           (followUser)="onFollowUser($event)"
+                           (unfollowUser)="onRemoveFollowedUser($event)">
                 </app-post>
         
                 <!--<app-post *ngFor="let post of all"-->
