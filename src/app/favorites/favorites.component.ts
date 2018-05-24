@@ -36,53 +36,55 @@ export class FavoritesComponent implements OnInit {
     this.myFireService.getFollowedUserArrayPromise(uid)
       .then( 
           (followedList) => {
-          
-            console.log("promise followed", followedList)
-          // )
+            // console.log("promise followed", followedList)
+            // )
             let followedUsers = followedList
             // const followedUsers = this.myFireService.getFollowedUserArray(uid)
-            console.log("followedUsers===========", followedUsers)
+            // console.log("followedUsers===========", followedUsers)
             this.allRef = firebase.database().ref('favorites/' + uid);
             this.allRef.on('child_added', data => {
-              console.log("data val", data.val(), data.key)
+            
+              let itemKey=null
+              data.forEach((key)=>{
+                console.log(key)
+                key.forEach((key)=>{
+                  console.log(key)
+                })
+              })
+              
+              for (var key in data.val()) {
+                console.log("item======", key)
+                for (var item in data.val()[key]['upLoadedBy']) {
+                  console.log("item", item)
+                }
+              }
+
+              // console.log("data val", data.val(), "data key",data.key)
               this.myFireService.checkUidAgainstFollowedUsersPromise(data.val().upLoadedBy.uid, followedUsers)
                 .then (
                   (followed) => {
                     console.log("followed====promise", followed)
-                // })
-              
-                  // const followed = this.myFireService.checkUidAgainstFollowedUsers(data.val().upLoadedBy.uid, followedUsers);
-                  // console.log("followed&&&&&&&&&&&&&", followed)
-                  this.all.push({
-                    key: data.key,
-                    data: data.val(),
-                    followed: followed
-                  });
-                  console.log("followed=======================", followed)
-                  console.log("this.all", this.all)
-                });
+                    this.all.push({
+                      key: data.key,
+                      data: data.val(),
+                      followed: followed
+                    });
+                    // console.log("followed=======================", followed)
+                    // console.log("this.all", this.all);
+                    // return (this.all)
+                  },
+                  (err)=>console.log("error"))
+                // .then(()=>{
+                //   console.log("chekck for posts")
+                //   setTimeout(()=>{this.utilityService.checkForPosts(this.all, "You have no favorites", "info")}, 500)
+
+                // });
                 
-                // PROMISE TEST 1 - SIMPLE PROMISE
-                this.utilityService.doAsyncTask()
-                  .then(
-                    (val) => console.log(val),
-                    (err) => console.error(err)
-                  )
-                  
-                setTimeout(()=>{this.utilityService.checkForPosts(this.all, "You have no favorites", "info")}, 500)
-    
             })
-        })
+            setTimeout(()=>{this.utilityService.checkForPosts(this.all, "You have no favorites", "info")}, 1000)
+
+        }, (err)=>console.log(err))
   }
-  
-  // moved to utility.service -- see above
-  // checkForPosts() {   
-  //   ////console.log("in checkForPosts")
-  //     if (this.all.length==0) {
-  //       ////console.log('wtf')
-  //       this.notificationService.display("info", "You have have no favorites")
-  //     }        
-  // }
   
   onRemoveFavoriteClicked(imageData){
     this.myFireService.handleRemoveFavoriteClicked(imageData)

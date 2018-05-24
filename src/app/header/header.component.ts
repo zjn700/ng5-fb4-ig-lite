@@ -54,10 +54,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
         // the way recommended online with Subject
         const $profile = this.userService.getUserProfile()
         // .takeWhile(() => this.alive)
-        .subscribe((userData)=>{
-          this.name = userData.name;
-          //console.log("fb-au-st-ch")
-          $profile.unsubscribe()
+          .subscribe((userData)=>{
+            this.name = userData.name;
+            //console.log("fb-au-st-ch")
+            $profile.unsubscribe()
         })
        
       } else {

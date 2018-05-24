@@ -82,7 +82,9 @@ export class MyFireService {
   
   handleImageUpload(data) {
     const user = this.userService.getUser();
-    //console.log('user', user);
+    const currentUser = this.userService.getCurrentUser()
+    console.log('user', user);
+    console.log('currentUseruser', currentUser);
     
     const imageKey = firebase.database().ref('images').push().key;
     const imageDetails = {
@@ -269,6 +271,7 @@ export class MyFireService {
   }
   
   getFollowedUserArrayPromise(uid) {
+    console.log("getFollowedUserArrayPromise")
     return new Promise((resolve, reject) => {
       const followedRef = this.getUsersFollowed(uid)
       console.log("followedRef=====", followedRef)
@@ -286,7 +289,11 @@ export class MyFireService {
           })
         });
       })
-      resolve(followedUsers); // pass values
+      if (!followedUsers) {
+        reject("error in getFollowedUserArrayPromise")
+      } else {
+        resolve(followedUsers); // pass values
+      }
     });
   }
 
@@ -305,10 +312,11 @@ export class MyFireService {
   // }
   
   checkUidAgainstFollowedUsersPromise(uid, followedUserList) {
-    return new Promise((resolve, reject) => {
+    console.log("checkUidAgainstFollowedUsersPromise")
+    //return new Promise((resolve, reject) => {
+    let promise =  new Promise((resolve, reject) => {
     setTimeout(()=>{
-        console.log("waitng")
-        console.log("checkUidAgainstFollowedUsers", "uid", uid , "list length", followedUserList.length,"followedlist", followedUserList)
+        console.log("checkUidAgainstFollowedUsersPromise", "uid", uid , "list length", followedUserList.length,"followedlist", followedUserList)
         let followed=null
         for (let i=0; i < followedUserList.length; i++) {
            console.log("uids", uid, followedUserList[i].uid, (uid===followedUserList[i].uid))
@@ -322,11 +330,11 @@ export class MyFireService {
         resolve(followed);
       }, 500)      
     });
+    return promise
   } 
   
   checkUidAgainstFollowedUsers(uid, followedUserList) {
     // setTimeout(()=>{
-      console.log("waitng")
       console.log("checkUidAgainstFollowedUsers", "uid", uid , "list length", followedUserList.length,"followedlist", followedUserList)
       let followed=null
       for (let i=0; i < followedUserList.length; i++) {

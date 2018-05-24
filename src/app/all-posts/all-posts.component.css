@@ -3,6 +3,8 @@
   flex-wrap: wrap;
   flex-direction: row;
   justify-content: flex-start;
+  margin-left: 5%;
+  /*margin-right: 5%;*/
 }
 
 app-post {

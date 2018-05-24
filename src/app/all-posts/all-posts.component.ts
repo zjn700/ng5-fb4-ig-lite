@@ -25,8 +25,10 @@ export class AllPostsComponent implements OnInit, OnDestroy {
   // switch: boolean = false;
   disableLoadMore: boolean = false
   displayPostedBy: boolean = true;
+  
   displayFavoriteButton: boolean = true;
   displayFollowButton: boolean = true;  
+  
   endOfAllposts:boolean = false;
   newFollowedUser: string = null;
   // unFollowedUse: string = null;

@@ -14,27 +14,14 @@
             <div class="file d-block btn-shadow">
               <button class="btn btn-info p-2 " [ngClass]="{'disabled': disableLoadMore}" (click)="onLoadMore()">Load More Images</button>
             </div>
-            <!--<img class="card-img-top" src="{{image}}" alt="Card image">-->
          </div>
-      </div>      
+      </div>  
       
-
-      <!--<div class="image-container">-->
-      <!--  <app-post *ngFor="let post of all"-->
-      <!--            [imageKey]="post.data.imageKey"-->
-      <!--            [uploadedBy]="post.data.upLoadedBy.uid"-->
-      <!--            [displayPostedBy] = "displayPostedBy"-->
-      <!--            [displayFavoriteButton] = "displayFavoriteButton"-->
-      <!--            [displayFollowButton] = "displayFollowButton"-->
-      <!--            [newFollowedUser] = "newFollowedUser"-->
-      <!--            (favoriteClicked)="onFavoriteClicked($event)"-->
-      <!--            (removeFavoriteClicked)="onRemoveFavoriteClicked($event)"-->
-      <!--            (followUser)="onFollowUser($event)"-->
-      <!--            (unfollowUser)="onRemoveFollowedUser($event)">-->
-        <!-->-->
-      <!--  </app-post>-->
-      <!--</div>-->
-      
+  <!--  </div>-->
+  <!--</div>-->
+  
+  <!--<div class="row">-->
+  <!--  <div class="col-md-12">-->
       <div class="image-container">
         <app-post *ngFor="let post of all"
                   [post]="post"
@@ -49,11 +36,10 @@
                   (removeFavoriteClicked)="onRemoveFavoriteClicked($event)"
                   (followUser)="onFollowUser($event)"
                   (unfollowUser)="onRemoveFollowedUser($event)">
-        <!-->-->
         </app-post>
       </div>
-      
-
+        
     </div>
   </div>
+
 </div>

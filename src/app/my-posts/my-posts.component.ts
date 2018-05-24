@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NotificationService } from '../shared/notification.service'
 import { MyFireService } from '../shared/my-fire.service'
+import { UserService } from '../shared/user.service'
 import * as firebase from 'firebase';
 import * as croppie from 'croppie';
 import * as $ from 'jquery'
@@ -20,14 +21,20 @@ export class MyPostsComponent implements OnInit, OnDestroy {
   displayFollowButton: boolean = false;
 
   constructor(private notificationService: NotificationService,
-              private myFireService: MyFireService) { }
+              private myFireService: MyFireService,
+              private userService: UserService) { }
 
   ngOnDestroy() {
     this.personalPostRef.off();
   }
 
   ngOnInit() {
+    const user = this.userService.getUser();
+    const currentUser = this.userService.getCurrentUser()
+    console.log('user uid', user.uid);
+    console.log('currentUseruser uid', currentUser.uid);
     const uid = firebase.auth().currentUser.uid;
+    console.log("uid from auth", uid)
     this.personalPostRef = this.myFireService.getUserPostRef(uid);
     this.personalPostRef.on('child_added', data => {
       this.postLists.push({
@@ -46,13 +53,6 @@ export class MyPostsComponent implements OnInit, OnDestroy {
       const file: File = fileList[0];
       this.notificationService.displayLoading('info', "Uploading your image: " + file.name)
        
-    //   $('.my-image').click(function(){
-    //     $(this).hide();
-    // });
-    // $('.my-image').croppie()
-        
-        
-
       this.myFireService.uploadFile(file)
         .then(data => {
           this.image = data['fileUrl'];

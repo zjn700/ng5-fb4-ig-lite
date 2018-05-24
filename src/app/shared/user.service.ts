@@ -8,14 +8,15 @@ export class UserService {
   
   public statusChange: any = new EventEmitter<any>()
   private userProfile = new Subject<any>();
-
-
+  public currentUser: any;
+  
   constructor() { }
   
   setUserProfile(user: any) {
     // two different solutions to the same problem
     this.userProfile.next(user);
     this.statusChange.emit(user)
+    this.currentUser = user
 
     localStorage.setItem('user', JSON.stringify(user));
   }
@@ -28,6 +29,11 @@ export class UserService {
   getUser() {
     return JSON.parse(localStorage.getItem('user'));
   }
+  
+  getCurrentUser() {
+    return this.currentUser
+  }
+  
   
   destroy() {
       localStorage.removeItem('user');

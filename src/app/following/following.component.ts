@@ -99,7 +99,7 @@ export class FollowingComponent implements OnInit, OnDestroy {
           )
       })
     }
-    setTimeout(()=>{this.utilityService.checkForPosts(this.postList, "You are not following anyone", "info")}, 500)
+    setTimeout(()=>{this.utilityService.checkForPosts(this.postList, "You are not following anyone", "info")}, 1000)
 
   }
   

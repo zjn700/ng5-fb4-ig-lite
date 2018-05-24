@@ -47,7 +47,17 @@ export class UtilityService {
         resolve(followed); // pass values
     });
   }
+  
+  
+  
+        // PROMISE TEST 1 - SIMPLE PROMISE
+        // this.utilityService.doAsyncTask()
+        //   .then(
+        //     (val) => console.log(val),
+        //     (err) => console.error(err)
+        //   )
 
+        // PROMISE TEST 2
         // as called from a component with multiple steps
         //   this.utilityService.doAsyncTask2()
         //           .then(

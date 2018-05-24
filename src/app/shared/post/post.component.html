@@ -1,94 +1,67 @@
+
+<!--<div class="row">-->
+<!--  <div class="col-sm-6">-->
+
 <div class="full-frame">
-
-
-  <div class="image-section">
-   <img [src]="defaultImage">
-   <!--<img src="{{defaultImage}}">-->
-  </div>
-
-  <div class="text-section">
-    <div class="text-section-row row0">
-      <span>{{imageData.name}} {{imageKey}} pfval {{postFollowed}} pfnotnll {{postFollowed!=null}} notcuiu {{!curUserIsUploader}} exp {{postFollowed!=null && !curUserIsUploader}}</span>
+<!--<div>-->
+  <!--<div class=card>-->
+  
+    <div class="image-sectionx">
+     <img [src]="defaultImage">
+     <!--<img src="{{defaultImage}}">-->
     </div>
- 
-    <div *ngIf="imageData.createdOn" class="text-section-row row1">
-      <span>Posted on: {{imageData.createdOn | date: 'MM/dd/yy'}}</span>
+  
+    <div class="text-section">
+      <div class="text-section-row row0">
+        <span>{{imageData.name}} {{imageKey}} pfval {{postFollowed}} pfnotnll {{postFollowed!=null}} notcuiu {{!curUserIsUploader}} exp {{postFollowed!=null && !curUserIsUploader}}</span>
+      </div>
+   
+      <div *ngIf="imageData.createdOn" class="text-section-row row1">
+        <span>Posted on: {{imageData.createdOn | date: 'MM/dd/yy'}}</span>
+      </div>
+  
+      <div *ngIf="imageData.upLoadedBy && displayPostedBy" class="text-section-row row2">
+        <span>Posted by: {{imageData.upLoadedBy.name}} {{imageData.upLoadedBy.uid}}</span>
+      </div>
+      
+      <div class="text-section-row row3">
+        <span># of Fav: {{imageData.favoriteCount}} cuiu: {{curUserIsUploader}}</span>
+      </div>
+      
+      <div class="text-section-row row4 action-row hvr-grow" 
+           *ngIf="displayFavoriteButton && favoritedKey==null">      
+        <span (click)="onFavoriteClicked()">
+          <i class="fa fa-heart"></i>
+          Add Image to Favorites
+        </span>
+      </div>
+      
+      <div class="text-section-row row4 action-row hvr-grow" 
+           *ngIf="!displayFavoriteButton && !curUserIsUploader">      
+        <span (click)="onRemoveFavoriteClicked()">
+          <i class="fa fa-heart"></i>
+          Remove Image to Favorites
+        </span>
+      </div>
+  
+      <div class="text-section-row row5 action-row hvr-grow" 
+           *ngIf="(postFollowed==null) && !curUserIsUploader">   
+        <span (click)="onFollowUser()">
+          <i class="fas fa-user-friends"></i>
+          Follow User {{post.followed==null}} {{!curUserIsUploader}}
+        </span>
+      </div>
+  
+      <div class="text-section-row row5 action-row hvr-grow" 
+           *ngIf="(postFollowed!=null) && !curUserIsUploader">  
+        <span (click)="onRemoveFollowedUser()">
+          <i class="fas fa-user-minus"></i>
+          Stop Following User {{post.followed}} {{post.followed==null}} {{!curUserIsUploader}}
+        </span>
+      </div>    
     </div>
-
-    <div *ngIf="imageData.upLoadedBy && displayPostedBy" class="text-section-row row2">
-      <span>Posted by: {{imageData.upLoadedBy.name}} {{imageData.upLoadedBy.uid}}</span>
-    </div>
-    
-    <div class="text-section-row row3">
-      <!--<span *ngIf="imagekey==favoritedKey"># of Fav: {{imageData.favoriteCount + 1}} {{imageKey}} {{favoritedKey}}</span>-->
-      <span># of Fav: {{imageData.favoriteCount}} cuiu: {{curUserIsUploader}}</span>
-      <!--<span># of Fav: {{favoriteCount}}</span>-->
-    </div>
-
-    <!--<div *ngIf="imageData.favoriteCount >= 0 && favoritedKey==null" class="text-section-row row3">-->
-      <!--<span *ngIf="imagekey==favoritedKey"># of Fav: {{imageData.favoriteCount + 1}} {{imageKey}} {{favoritedKey}}</span>-->
-    <!--  <span># of Fav: {{imageData.favoriteCount}}</span>-->
-      <!--<span># of Fav: {{favoriteCount}}</span>-->
-    <!--</div>-->
-    
-    <!--<div *ngIf="imageData.favoriteCount >= 0 && favoritedKey==imageKey" class="text-section-row row3">-->
-    <!--  <span># of Fav: {{imageData.favoriteCount}}  blah</span>-->
-
-      <!--<span *ngIf="imagekey==favoritedKey"># of Fav: {{imageData.favoriteCount + 1}} {{imageKey}} {{favoritedKey}}</span>-->
-      <!--<span *ngIf="favoritedKey==null"># of Fav: {{imageData.favoriteCount}}</span>-->
-      <!--<span># of Fav: {{favoriteCount}}</span>-->
-    <!--</div>-->
-
-    <!--<div class="text-section-row row4 action-row hvr-grow" -->
-    <!--     *ngIf="displayFavoriteButton && favoritedKey==null">-->
-    
-    <div class="text-section-row row4 action-row hvr-grow" 
-         *ngIf="displayFavoriteButton && favoritedKey==null">      
-      <span (click)="onFavoriteClicked()">
-        <!--<span class="glyphicon glyphicon-heart"></span>-->
-        <i class="fa fa-heart"></i>
-        Add Image to Favorites
-      </span>
-    </div>
-    
-    <!--<div class="text-section-row row4 action-row hvr-grow" -->
-    <!--     *ngIf="(displayUnfavoriteButton && !curUserIsUploader) || favoritedKey!=null">-->
-    <div class="text-section-row row4 action-row hvr-grow" 
-         *ngIf="!displayFavoriteButton && !curUserIsUploader">      
-      <span (click)="onRemoveFavoriteClicked()">
-        <!--<span class="glyphicon glyphicon-heart"></span>-->
-        <i class="fa fa-heart"></i>
-        Remove Image to Favorites
-      </span>
-    </div>
-
-    <!--<div class="text-section-row row5 action-row hvr-grow" *ngIf="post.followed==null && displayFollowButton && followedKey==null">-->
-    <!--<div class="text-section-row row5 action-row hvr-grow" -->
-    <!--     *ngIf="post.followed==null && displayFollowButton">-->
-    <!--<div class="text-section-row row5 action-row hvr-grow" -->
-    <!--     *ngIf="post.followed==null && !curUserIsUploader">      -->
-    <div class="text-section-row row5 action-row hvr-grow" 
-         *ngIf="(postFollowed==null) && !curUserIsUploader">   
-      <span (click)="onFollowUser()">
-        <!--<span class="glyphicon glyphicon-tags"></span>-->
-        <!--<i class="fas fa-user-plus"></i>-->
-        <i class="fas fa-user-friends"></i>
-        Follow User {{post.followed==null}} {{!curUserIsUploader}}
-      </span>
-    </div>
-    
-    <!--<div class="text-section-row row5 action-row hvr-grow" -->
-    <!--     *ngIf="(post.followed!=null && !displayFollowButton && !curUserIsUploader) || uploadedBy==followedKey">-->
-    <!--<div class="text-section-row row5 action-row hvr-grow" -->
-    <!--     *ngIf="post.followed!=null && !curUserIsUploader">      -->
-    <div class="text-section-row row5 action-row hvr-grow" 
-         *ngIf="(postFollowed!=null) && !curUserIsUploader">  
-      <span (click)="onRemoveFollowedUser()">
-        <!--<span class="glyphicon glyphicon-heart"></span>-->
-        <i class="fas fa-user-minus"></i>
-        Stop Following User {{post.followed}} {{post.followed==null}} {{!curUserIsUploader}}
-      </span>
-    </div>    
-  </div>
-
+  
+  <!--</div>-->
 </div>
+<!--</div>-->
+<!--</div>-->
