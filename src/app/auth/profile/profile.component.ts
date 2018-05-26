@@ -107,7 +107,7 @@ export class ProfileComponent implements OnInit {
   
   onImageLoad(event) {
     console.log('event', event)
-      // this.utilityService.onImageLoad(event)
+      this.utilityService.onImageLoad(event)
   }
   onImageChange(event) {
     console.log('change event =========================', event)
