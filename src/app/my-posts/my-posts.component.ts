@@ -37,6 +37,7 @@ export class MyPostsComponent implements OnInit, OnDestroy {
     console.log("uid from auth", uid)
     this.personalPostRef = this.myFireService.getUserPostRef(uid);
     this.personalPostRef.on('child_added', data => {
+      console.log("data my post init", data.val())
       this.postLists.push({
         // key: data.key,
         key: data.val().imageKey,

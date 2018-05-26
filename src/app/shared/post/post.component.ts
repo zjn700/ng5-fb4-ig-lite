@@ -1,7 +1,9 @@
-import { Component, Input, Output, OnInit, OnDestroy, EventEmitter } from '@angular/core';
+import { Component, Input, Output, OnInit, OnDestroy, EventEmitter, HostListener } from '@angular/core';
 import * as firebase from "firebase";
 import { Subscription } from 'rxjs/Subscription';
 import { MyFireService } from '../my-fire.service'
+import { UtilityService } from "../utility.service";
+
 
 @Component({
   selector: 'app-post',
@@ -39,9 +41,23 @@ export class PostComponent implements OnInit, OnDestroy {
   @Output() removeFavoriteClicked = new EventEmitter<any>();
   @Output() unfollowUser = new EventEmitter<any>();
 
+   @HostListener('window:resize', ['$event']) onResize($event) {
+     console.log("window resize")
+      let menuItems = document.getElementsByClassName("postImage"); 
+      // console.log("event", event)
+      // console.log("menuItems", menuItems)
+      for (let i=0; i < menuItems.length; i++) {
+            let evt = {currentTarget: menuItems[i]}
+            // this.utilityService.onImageLoad(evt)
+            // menuItems[i].classList.remove('active')
+      }
+      // this.el.nativeElement.classList.add('active');
+  }
+
   subscription: Subscription;
 
-  constructor(private myFireService: MyFireService) { }
+  constructor(private myFireService: MyFireService,
+              private utilityService: UtilityService) { }
 
   ngOnDestroy() {
       // unsubscribe to ensure no memory leaks
@@ -51,31 +67,6 @@ export class PostComponent implements OnInit, OnDestroy {
   ngOnInit() {
     
     const uid = firebase.auth().currentUser.uid
-    
-    
-    // this.myFireService.verifyUserIsFollowed(uid, this.uploadedBy)
-    //   .then(data => {
-    //     console.log("data", data)
-    //     if (data){
-    //       this.postFollowed = data
-    //     } else {
-    //       this.postFollowed = null
-    //     }
-        
-    //   })
-    console.log("================" )
-    
-    // firebase.database().ref('following/' + uid + '/' + this.uploadedBy)
-    //   .once('value')
-    //   .then(snapshot => {
-    //     console.log("snapshot.val in post", snapshot.val(), snapshot.key)
-    //     if (snapshot.val()){
-    //       // this.displayFollowButton = !snapshot.val()
-    //       this.postFollowed = snapshot.val()
-    //     } else {
-    //       this.postFollowed = null
-    //     }
-    //   });
     
     firebase.database().ref('favorites/' + uid + '/' + this.imageKey)
       .once('value')
@@ -96,7 +87,6 @@ export class PostComponent implements OnInit, OnDestroy {
         this.postFollowed =true
         
       }
-
        // remove unique identifiers from the saved name for display only
        let arr = (this.imageData.name).split('_');
        let removed = arr.splice(-1,2).join();
@@ -164,7 +154,16 @@ export class PostComponent implements OnInit, OnDestroy {
       });       
 
   }
+
+  onImageLoad(event) {
+    console.log('event', event)
+      this.utilityService.onImageLoad(event)
+  }
   
+  onImageClick(event) {
+    console.log('click event', event)
+      // this.utilityService.onImageLoad(event)
+  }   
   
 }
 

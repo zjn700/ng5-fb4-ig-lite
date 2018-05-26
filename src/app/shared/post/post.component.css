@@ -6,13 +6,25 @@
   justify-content: space-between;
   border: 1px solid #dcd5d3;
   border-radius: 5px;
-  width: 175px;
+  width: 200px;
+  box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
+
+}
+
+.image-section {
+  height: 180px;
+  width: 190px;
+  margin: 5px; 
+  padding: 3px; 
+  overflow: hidden; 
+  position: relative;
 }
 
 img{
   padding: 5px;
-  height: 175px;
-  width: 175px;
+  /*height: 175px;*/
+  /*width: 175px;*/
+  height: auto;
 
 }
 
@@ -59,3 +71,38 @@ img{
 .action-row {
   cursor: pointer;
 }
+
+/*// Extra small devices (portrait phones, less than 576px)*/
+@media (max-width: 575px) { 
+    .card {
+        /*width: 500px;*/
+    }
+    
+}
+/*// Small devices (landscape phones, 576px and up)*/
+@media (min-width: 576px) and (max-width: 767px) { 
+  /*.full-frame{ */
+  /*  width:490px;*/
+  /*}*/
+  
+  /*.image-section {*/
+  /*  height: 470px;*/
+  /*  width: 480px;*/
+  /*}*/
+  
+  /*img{*/
+  /*padding: 5px;*/
+  /*height: 175px;*/
+  /* width: 470px;*/
+
+  /*}*/
+}
+
+/*// Medium devices (tablets, 768px and up)*/
+@media (min-width: 768px) and (max-width: 991px) {  }
+
+/*// Large devices (desktops, 992px and up)*/
+@media (min-width: 992px) and (max-width: 1199px) {  }
+
+/*// Extra large devices (large desktops, 1200px and up)*/
+@media (min-width: 1200px) { }

@@ -6,8 +6,9 @@
 <!--<div>-->
   <!--<div class=card>-->
   
-    <div class="image-sectionx">
-     <img [src]="defaultImage">
+    <div class="image-section">
+     <img class="postImage" [src]="defaultImage" (load)="onImageLoad($event)"  (click)="onImageClick($event)">
+     <!--<img class="postImage img-thumbnail" [src]="defaultImage" (load)="onImageLoad($event)"  (click)="onImageClick($event)">-->
      <!--<img src="{{defaultImage}}">-->
     </div>
   

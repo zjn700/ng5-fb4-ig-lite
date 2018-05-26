@@ -1,49 +1,37 @@
-
-/*.page {*/
-/*	margin: 1em auto;*/
-/*	max-width: 768px;*/
-/*	display: flex;*/
-/*	align-items: flex-start;*/
-/*	flex-wrap: wrap;*/
-/*	height: 100%;*/
-/*}*/
-
-/*.box {*/
-/*	padding: 0.5em;*/
-/*	width: 100%;*/
-/*	margin:0.5em;*/
-/*}*/
-
-/*.box-2 {*/
-/*	padding: 0.5em;*/
-/*	width: calc(100%/2 - 1em);*/
-/*}*/
-
-/*.options label,*/
-/*.options input{*/
-/*	width:4em;*/
-/*	padding:0.5em 1em;*/
-/*}*/
-/*.btn{*/
-/*	background:white;*/
-/*	color:black;*/
-/*	border:1px solid black;*/
-/*	padding: 0.5em 1em;*/
-/*	text-decoration:none;*/
-/*	margin:0.8em 0.3em;*/
-/*	display:inline-block;*/
-/*	cursor:pointer;*/
-/*}*/
-
-/*.hide {*/
-/*	display: none;*/
-/*}*/
-
 img {
 	max-width: 100%;
+	height: auto; 
 }
 
+.card {
+  box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
+  /*height: 225px;*/
+  /*width: 235px;*/
+  margin: 5px; 
+  padding: 3px; 
+  overflow: hidden; 
+  position: relative;
+}
 
+/*// Extra small devices (portrait phones, less than 576px)*/
+@media (max-width: 575px) { 
+    .card {
+        /*width: 500px;*/
+    }
+    
+}
+
+/*// Small devices (landscape phones, 576px and up)*/
+@media (min-width: 576px) and (max-width: 767px) { }
+
+/*// Medium devices (tablets, 768px and up)*/
+@media (min-width: 768px) and (max-width: 991px) {  }
+
+/*// Large devices (desktops, 992px and up)*/
+@media (min-width: 992px) and (max-width: 1199px) {  }
+
+/*// Extra large devices (large desktops, 1200px and up)*/
+@media (min-width: 1200px) { }
 
 
 
