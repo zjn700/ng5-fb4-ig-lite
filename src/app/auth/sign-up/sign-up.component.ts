@@ -31,7 +31,7 @@ export class SignUpComponent implements OnInit {
         const message = `A verification email was sent to ${email}`;
         
         this.notificationService.display('success', message )
-        
+        console.log("userData", userData)
         return firebase.database().ref('users/' + userData.uid).set({
           email: email,
           uid: userData.uid,
@@ -39,6 +39,7 @@ export class SignUpComponent implements OnInit {
           registrationDate: new Date().toString()
         })
         .then(()=>{
+          console.log("then after sign up")
           firebase.auth().signOut();
         })
         

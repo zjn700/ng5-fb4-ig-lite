@@ -29,9 +29,11 @@ export class MyPostsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    const user = this.userService.getUser();
-    const currentUser = this.userService.getCurrentUser()
-    console.log('user uid', user.uid);
+    const currentUser = this.userService.getUser();
+        // const uid = firebase.auth().currentUser.uid
+
+    // const currentUser = this.userService.getCurrentUser()
+    // console.log('user uid', user.uid);
     console.log('currentUseruser uid', currentUser.uid);
     const uid = firebase.auth().currentUser.uid;
     console.log("uid from auth", uid)

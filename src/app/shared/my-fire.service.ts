@@ -81,8 +81,8 @@ export class MyFireService {
   }
   
   handleImageUpload(data) {
-    const user = this.userService.getUser();
-    const currentUser = this.userService.getCurrentUser()
+    const currentUser = this.userService.getUser();
+    // const currentUser = this.userService.getCurrentUser()
     console.log('user', user);
     console.log('currentUseruser', currentUser);
     

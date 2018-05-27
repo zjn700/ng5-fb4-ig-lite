@@ -19,6 +19,7 @@ export class UserService {
     this.currentUser = user
 
     localStorage.setItem('user', JSON.stringify(user));
+    console.log("setUserProfile in UserService", user)
   }
   
   
