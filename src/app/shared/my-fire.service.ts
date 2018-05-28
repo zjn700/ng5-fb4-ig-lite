@@ -14,10 +14,132 @@ export class MyFireService {
   constructor(private userService: UserService) {}
 
   // USER
+  
+  // getUserFromDatabase(uid) {
+  //   const ref = firebase.database().ref('users/' + uid);
+  //   return ref.once('value')
+  //             .then(snapshot => snapshot.val())
+  // }
+  
+  checkHoldingArea(uid) {
+    const refTemp = firebase.database().ref('usersHoldingArea/' + uid);
+    refTemp.once('value')
+      .then(snapshot => {
+        if (snapshot.exists()) {
+          console.log("Yep, but we can fix that", snapshot.val())
+          const userData = snapshot.val();
+          firebase.database().ref('users/' + userData.uid).set(
+            {
+              email: userData.email,
+              uid: userData.uid,
+              name: userData.name,
+              registrationDate: userData.registrationDate //new Date().toString()
+            }
+          )
+          .then(()=> {
+              refTemp.remove(); 
+              return false
+          })            
+          
+        } else {
+          console.log("None============== good to go")
+          return false
+        }
+      })
+  }
+  
   getUserFromDatabase(uid) {
-    const ref = firebase.database().ref('users/' + uid);
-    return ref.once('value')
-              .then(snapshot => snapshot.val())
+    console.log("checkHoldingArea", this.checkHoldingArea(uid))
+    if (!this.checkHoldingArea(uid)) {
+      const ref = firebase.database().ref('users/' + uid);
+      return ref.once('value')
+                    .then(snapshot => snapshot.val())
+          
+    }
+    // console.log("ooooooooooooooops")
+  }
+    
+    // const ref = firebase.database().ref('users/' + uid);
+    // ref.once('value', (snapshot => {
+    //   if (snapshot.exists()) {
+    //     console.log("user in db");
+    //     const ref2 = firebase.database().ref('users/' + uid);
+    //     // return ref.once('value')
+    //     // return ref2.once('value')
+    //     //           .then(snapshot => snapshot.val())
+
+    //   } else {
+    //     console.log("not here")
+        
+    //     const refTemp = firebase.database().ref('usersHoldingArea/' + uid);
+    //     if (refTemp) { 
+    //       refTemp.once('value')
+    //         .then(snapshot => {
+    //           if (snapshot.exists()) {
+    //             console.log('Yep', snapshot.val())
+    //             // snapshot.val()
+    //           } else {
+    //             console.log("None")
+    //           }
+    //         })      
+    //     }        
+        
+    //   }
+    // }))
+
+    
+    
+    // const refTemp = firebase.database().ref('usersHoldingArea/' + uid);
+    // if (refTemp) { 
+    //   refTemp.once('value')
+    //     .then(snapshot => {
+    //       if (snapshot.exists()) {
+    //         console.log('Yep', snapshot.val())
+    //         // snapshot.val()
+    //       } else {
+    //         console.log("None")
+    //       }
+    //     })      
+    // }
+    
+  //   console.log('oooops')
+  //   // const ref2 = firebase.database().ref('users/' + uid);
+  //   // return ref2.once('value')
+  //   //           .then(snapshot => snapshot.val())
+  // }
+  
+  getUserFromDatabasexx(uid) {
+    const refTemp = firebase.database().ref('usersHoldingArea/' + uid);
+    console.log("refTemp", refTemp)
+      // if (refTemp) {
+        console.log("here")
+        refTemp.once('value')
+          .then(snapshot => {
+            console.log("then snapshot")
+            if (snapshot.exists()) {
+            const userData = snapshot.val()
+            console.log("userData val from holding area", userData, userData.uid)
+            const x = firebase.database().ref('users/' + userData.uid).set(
+              {
+                email: userData.email,
+                uid: userData.uid,
+                name: userData.name,
+                registrationDate: userData.registrationDate //new Date().toString()
+              }
+            )
+            refTemp.remove()
+            const ref = firebase.database().ref('users/' + uid);
+            return ref.once('value')
+                .then(snapshot => console.log("after remove",snapshot.val()))
+          // })
+           
+      } else {
+  
+        const ref = firebase.database().ref('users/' + uid);
+        return ref.once('value')
+                .then(snapshot => console.log("snapshot, no holding area", snapshot.val()))
+      }
+    })
   }
   
   getUserPostRef(uid) {
@@ -81,10 +203,11 @@ export class MyFireService {
   }
   
   handleImageUpload(data) {
-    const currentUser = this.userService.getUser();
+    // const currentUser = this.userService.getUser();
     // const currentUser = this.userService.getCurrentUser()
-    console.log('user', user);
-    console.log('currentUseruser', currentUser);
+    const user = this.userService.getCurrentUser()
+    // console.log('user', user);
+    // console.log('currentUseruser', currentUser);
     
     const imageKey = firebase.database().ref('images').push().key;
     const imageDetails = {
@@ -119,6 +242,7 @@ export class MyFireService {
     updates['/images/' + imageKey] = imageDetails;
     
     return firebase.database().ref().update(updates)
+    
     
   }
   

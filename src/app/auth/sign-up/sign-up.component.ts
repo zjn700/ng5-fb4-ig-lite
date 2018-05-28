@@ -27,23 +27,42 @@ export class SignUpComponent implements OnInit {
     firebase.auth().createUserWithEmailAndPassword(email, password)
       .then(userData => {
         userData.sendEmailVerification();
-        //console.log(userData);
+        console.log("userData create user", userData)
         const message = `A verification email was sent to ${email}`;
         
         this.notificationService.display('success', message )
-        console.log("userData", userData)
-        return firebase.database().ref('users/' + userData.uid).set({
-          email: email,
-          uid: userData.uid,
-          name: fullname,
-          registrationDate: new Date().toString()
-        })
-        .then(()=>{
-          console.log("then after sign up")
-          firebase.auth().signOut();
-        })
+        
+        // firebase.auth().signInWithEmailAndPassword(email, password)
+        //   .then(userData => {        
+        
+           return firebase.database().ref('usersHoldingArea/' + userData.uid).set({
+              email: email,
+              uid: userData.uid,
+              name: fullname,
+              registrationDate: new Date().toString()
+            })
+            .then(()=>{
+              console.log("then after holding area sign up")
+              firebase.auth().signOut();
+            })        
+        
+        
+            // console.log("userData sign-in", userData)
+            // return firebase.database().ref('users/' + userData.uid).set({
+            //   email: email,
+            //   uid: userData.uid,
+            //   name: fullname,
+            //   registrationDate: new Date().toString()
+            // })
+            // .then(()=>{
+            //   console.log("then after sign up")
+            //   firebase.auth().signOut();
+            // })
+          // })
+          
         
       })
+      // sign-up error
       .catch(err => {
         this.notificationService.display('error', err.message)
         console.log(err)

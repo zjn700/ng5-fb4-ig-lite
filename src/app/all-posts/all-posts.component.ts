@@ -76,6 +76,9 @@ export class AllPostsComponent implements OnInit, OnDestroy {
 
         //console.log("============")
 
+    const userSavedInService = this.userService.getCurrentUser()
+    console.log('userSavedInService allpost', userSavedInService);
+
     this.allRef = firebase.database().ref('allposts').limitToFirst(this.maxPerLoad);
     
     this.allRef.on('child_added', data => {

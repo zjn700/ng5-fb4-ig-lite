@@ -3,6 +3,7 @@ import * as firebase from "firebase";
 import { Subscription } from 'rxjs/Subscription';
 import { MyFireService } from '../my-fire.service'
 import { UtilityService } from "../utility.service";
+import { UserService } from "../user.service";
 
 
 @Component({
@@ -57,7 +58,8 @@ export class PostComponent implements OnInit, OnDestroy {
   subscription: Subscription;
 
   constructor(private myFireService: MyFireService,
-              private utilityService: UtilityService) { }
+              private utilityService: UtilityService,
+              private userService: UserService) { }
 
   ngOnDestroy() {
       // unsubscribe to ensure no memory leaks
@@ -65,6 +67,9 @@ export class PostComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    
+    const userSavedInService = this.userService.getCurrentUser()
+    console.log('userSavedInService post', userSavedInService);
     
     const uid = firebase.auth().currentUser.uid
     
