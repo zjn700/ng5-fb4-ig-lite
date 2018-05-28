@@ -36,14 +36,31 @@ export class FavoritesComponent implements OnInit {
     this.myFireService.getFollowedUserArrayPromise(uid)
       .then( 
           (followedList) => {
-            // console.log("promise followed", followedList)
+            console.log("promise followed", followedList)
             // )
             let followedUsers = followedList
             // const followedUsers = this.myFireService.getFollowedUserArray(uid)
             // console.log("followedUsers===========", followedUsers)
+            const refTemp = firebase.database().ref('favorites/' + uid);
+            refTemp.once('value')
+              .then(snapshot => {
+                if (!snapshot.exists()) {
+                  console.log("ain't got no favs")
+                  this.notificationService.display("info", "You have no favorites")
+
+                  // this.utilityService.checkForPosts(this.all, "You have no favorites", "info")
+
+                } else {
+                  console.log("yes there are favs")
+                }
+              })
+            
+            
+            
             this.allRef = firebase.database().ref('favorites/' + uid);
             this.allRef.on('child_added', data => {
-            
+              console.log("checking...")
+              if (data.exists()) { console.log("yes data exists") } else { console.log("nope no data here")}
               let itemKey=null
               data.forEach((key)=>{
                 console.log(key)
@@ -81,9 +98,9 @@ export class FavoritesComponent implements OnInit {
                 // });
                 
             })
-            setTimeout(()=>{this.utilityService.checkForPosts(this.all, "You have no favorites", "info")}, 1000)
+            // setTimeout(()=>{this.utilityService.checkForPosts(this.all, "You have no favorites", "info")}, 1000)
 
-        }, (err)=>console.log(err))
+        }, (err)=>console.log("ERRRRR", err))
   }
   
   onRemoveFavoriteClicked(imageData){

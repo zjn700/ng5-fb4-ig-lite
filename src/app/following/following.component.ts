@@ -60,7 +60,18 @@ export class FollowingComponent implements OnInit, OnDestroy {
   
   getOtherUsersPosts(uidList, uid){
 
-    
+    const refTemp = firebase.database().ref('following/' + uid);
+    refTemp.once('value')
+      .then(snapshot => {
+        if (!snapshot.exists()) {
+          console.log("ain't following anyone")
+          this.notificationService.display("info", "You are not following anyone")
+  
+        } else {
+          console.log("yes i am following them")
+        }
+      })
+      
     const followedUsers = this.myFireService.getFollowedUserArray(uid)
     console.log("followedUsers====", followedUsers)
     this.postList.length=0;
@@ -99,7 +110,7 @@ export class FollowingComponent implements OnInit, OnDestroy {
           )
       })
     }
-    setTimeout(()=>{this.utilityService.checkForPosts(this.postList, "You are not following anyone", "info")}, 1000)
+    // setTimeout(()=>{this.utilityService.checkForPosts(this.postList, "You are not following anyone", "info")}, 1000)
 
   }
   
