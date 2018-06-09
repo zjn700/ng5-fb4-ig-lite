@@ -118,7 +118,30 @@ export class UtilityService {
     //console.log("img", img)
   }
  
- 
+  dataURLToBlob(dataURL) {
+    var BASE64_MARKER = ';base64,';
+    if (dataURL.indexOf(BASE64_MARKER) == -1) {
+        var parts = dataURL.split(',');
+        var contentType = parts[0].split(':')[1];
+        var raw = parts[1];
+        console.log("raw", raw)
+
+        return new Blob([raw], {type: contentType});
+    }
+
+    var parts = dataURL.split(BASE64_MARKER);
+    var contentType = parts[0].split(':')[1];
+    var raw2 = window.atob(parts[1]);
+    var rawLength = raw2.length;
+
+    var uInt8Array = new Uint8Array(rawLength);
+
+    for (var i = 0; i < rawLength; ++i) {
+        uInt8Array[i] = raw2.charCodeAt(i);
+    }
+    console.log("uInt8Array", uInt8Array)
+    return new Blob([uInt8Array], {type: contentType});
+  }
  
  
 }

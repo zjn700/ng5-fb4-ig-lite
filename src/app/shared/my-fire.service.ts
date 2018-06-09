@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as firebase from 'firebase';
 import { UserService } from './user.service';
+import { UtilityService } from './utility.service';
 import { Observable } from 'rxjs';
 import { Subject } from 'rxjs/Subject';
 import * as _ from "lodash";
@@ -11,7 +12,8 @@ export class MyFireService {
   
   private subject = new Subject<any>();
   
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService,
+              private utilityService: UtilityService) {}
 
   // USER
   
@@ -56,7 +58,6 @@ export class MyFireService {
                     .then(snapshot => snapshot.val())
           
     }
-    // //console.log("ooooooooooooooops")
   }
     
     // const ref = firebase.database().ref('users/' + uid);
@@ -168,53 +169,71 @@ export class MyFireService {
       
   }
   
-  resizeImagexx(file){
-    if(file.type.match(/image.*/)) {
-      console.log('An image has been loaded ==========');
-      console.log("file", file)
-      // Load the image
-      var reader = new FileReader();
-      reader.onload = function (readerEvent) {
-          var image = new Image();
-          image.onload = function (imageEvent) {
+  resizeImage(file) {
+       
+      let utilityService = this.utilityService
+      let thi$ = this
+      let uploadTask
+ 
+      if(file.type.match(/image.*/)) {
+        console.log('An image has been loaded');
+        console.log("file", file)
+        // Load the image
+        var reader = new FileReader();
+        
+        return new Promise((resolve, reject) => {
 
-              // Resize the image
-              var canvas = document.createElement('canvas'),
-                  max_size = 544,// TODO : pull max size from a site config
-                  width = image.width,
-                  height = image.height;
-              if (width > height) {
-                  if (width > max_size) {
-                      height *= max_size / width;
-                      width = max_size;
+            reader.onload = function (readerEvent) {
+              var image = new Image();
+              console.log("onreader load")
+              image.onload = function (imageEvent) {
+  
+                  // Resize the image
+                  var canvas = document.createElement('canvas'),
+                      // max_size = 544,// TODO : pull max size from a site config
+                      max_size = 1024,// TODO : pull max size from a site config
+                      width = image.width,
+                      height = image.height;
+                  if (width > height) {
+                      if (width > max_size) {
+                          height *= max_size / width;
+                          width = max_size;
+                      }
+                  } else {
+                      if (height > max_size) {
+                          width *= max_size / height;
+                          height = max_size;
+                      }
                   }
-              } else {
-                  if (height > max_size) {
-                      width *= max_size / height;
-                      height = max_size;
-                  }
+                  canvas.width = width;
+                  canvas.height = height;
+                  console.log("canvas width, height", width, height)
+                  canvas.getContext('2d').drawImage(image, 0, 0, width, height);
+                  var dataUrl = canvas.toDataURL('image/jpeg');
+                  var resizedImage = utilityService.dataURLToBlob(dataUrl);
+                  // the only method that allowed resizing before upload to firebase storage
+                  uploadTask = thi$.uploadImageBlob(file, resizedImage)
+                  console.log("uploadTask 1", uploadTask)
+                  
+                  //resolve(temporaryFileReader.result);
+                  resolve(uploadTask);
+                  // resolve(uploadTask);
+  
               }
-              canvas.width = width;
-              canvas.height = height;
-              console.log("canvas width, height", width, height)
-              canvas.getContext('2d').drawImage(image, 0, 0, width, height);
-              var dataUrl = canvas.toDataURL('image/jpeg');
-              console.log("dataUrl ==================", dataUrl)
-              // var resizedImage = dataURLToBlob(dataUrl);
-              // $.event.trigger({
-              //     type: "imageResized",
-              //     blob: resizedImage,
-              //     url: dataUrl
-              // });
+              // console.log("uploadTask top", uploadTask)
+  
+              image.src = reader.result;  // image.src = readerEvent.target.result; // change this to  reader.result
+              console.log("image.src", image.src)
+              // this is one of three ways to load an image to firebase storage
+              thi$.uploadImageFile(file, image.src)
           }
-          // image.src = readerEvent.target.result;
-          image.src = reader.result;
-          console.log("image.src fire service", image.src)
-          return image.src
+        reader.readAsDataURL(file);
+        })
+
       }
-      // reader.readAsDataURL(file);
-    }  
+      
   }
+  
   
   // FILE UPLOAD
   uploadImageBlob(file, bytes) {
@@ -223,9 +242,24 @@ export class MyFireService {
     const fileName = this.randomizeFileName(file.name)
 
     const fileRef = firebase.storage().ref().child('image3/' + fileName )
-    fileRef.put(bytes).then((snapshot)=> {
-      console.log('Uploaded an array!', fileName, snapshot);
-    })
+    const uploadTask = fileRef.put(bytes)
+    //   .then((snapshot)=> {
+    //   console.log('Uploaded an array!', fileName, snapshot);
+      console.log("uploadTask blob", uploadTask)
+    // })
+    
+    // return {fileName: fileName, uploadTask: uploadTask} 
+    return uploadTask
+    // 
+    // return new Promise((resolve, reject) => {
+    //   uploadTask.on('state_changed', snapshot=> {
+    //   }, error => {
+    //     reject(error);
+    //   }, ()=> {
+    //     const fileUrl = uploadTask.snapshot.downloadURL;
+    //     resolve({fileName, fileUrl});
+    //   });
+    // })
   }
 
 
@@ -249,7 +283,7 @@ export class MyFireService {
     /////////
     const fileName = this.randomizeFileName(file.name)
 
-    const fileRef = firebase.storage().ref().child('image1a/' + fileName )
+    const fileRef = firebase.storage().ref().child('image/' + fileName )
     const uploadTask = fileRef.put(file);
     
     // const uploadTask = fileRef.putString(base64ImageUrl, 'data_url')

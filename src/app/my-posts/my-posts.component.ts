@@ -87,17 +87,13 @@ export class MyPostsComponent implements OnInit, OnDestroy {
                 canvas.getContext('2d').drawImage(image, 0, 0, width, height);
                 var dataUrl = canvas.toDataURL('image/jpeg');
                 var resizedImage = thi$.dataURLToBlob(dataUrl);
+                // the only method that allowed resizing before upload to firebase storage
                 mfs.uploadImageBlob(file, resizedImage)
-                // $.event.trigger({
-                //     type: "imageResized",
-                //     blob: resizedImage,
-                //     url: dataUrl
-                // });
+
             }
-            // image.src = readerEvent.target.result;
-            image.src = reader.result;
+            image.src = reader.result;  // image.src = readerEvent.target.result; // change this to  reader.result
             console.log("image.src", image.src)
-            // return image.src
+            // this is one of three ways to load an image to firebase storage
             mfs.uploadImageFile(file, image.src)
         }
         reader.readAsDataURL(file);
@@ -140,72 +136,25 @@ export class MyPostsComponent implements OnInit, OnDestroy {
       const file: File = fileList[0];
       
       // console.log("resizeImage", this.myFireService.uploadImageFile(this.resizeImage(file)))
-      this.resizeImage(file)
+      // this.resizeImage(file)
+      this.myFireService.resizeImage(file)
+        .then(data => {
+          console.log("data resized", data, data['downloadURL'], data['ref']['name'])
+          this.image = data['downloadURL'];
+          this.notificationService.displayLoading(null, null)
+          this.notificationService.display('info', "Image was uploaded");
+          this.myFireService.handleImageUpload({fileUrl: data['downloadURL'], fileName: data['ref']['name'] });          
 
-      
-      
-      // if(file.type.match(/image.*/)) {
-      //   console.log('An image has been loaded');
-      //   console.log("file", file)
-      //   // Load the image
-      //   var reader = new FileReader();
-      //   reader.onload = function (readerEvent) {
-      //       var image = new Image();
-      //       console.log("onreader load")
-      //       image.onload = function (imageEvent) {
+        })
 
-      //           // Resize the image
-      //           var canvas = document.createElement('canvas'),
-      //               max_size = 544,// TODO : pull max size from a site config
-      //               width = image.width,
-      //               height = image.height;
-      //           if (width > height) {
-      //               if (width > max_size) {
-      //                   height *= max_size / width;
-      //                   width = max_size;
-      //               }
-      //           } else {
-      //               if (height > max_size) {
-      //                   width *= max_size / height;
-      //                   height = max_size;
-      //               }
-      //           }
-      //           canvas.width = width;
-      //           canvas.height = height;
-      //           console.log("canvas width, height", width, height)
-      //           canvas.getContext('2d').drawImage(image, 0, 0, width, height);
-      //           var dataUrl = canvas.toDataURL('image/jpeg');
-      //           // var resizedImage = dataURLToBlob(dataUrl);
-      //           // $.event.trigger({
-      //           //     type: "imageResized",
-      //           //     blob: resizedImage,
-      //           //     url: dataUrl
-      //           // });
-      //       }
-      //       // image.src = readerEvent.target.result;
-      //       image.src = reader.result;
-      //       console.log("image.src", image.src)
-      //       //return image.src
-      //       // this.myFireService.uploadImageFile(image.src)
-      //   }
-      //   reader.readAsDataURL(file);
-      // }
-      
-      
-      
-      
-      
-      
-      
-      
       this.notificationService.displayLoading('info', "Uploading your image: " + file.name)
        
       this.myFireService.uploadFile(file)
         .then(data => {
-          this.image = data['fileUrl'];
-          this.notificationService.displayLoading(null, null)
-          this.notificationService.display('info', "Image was uploaded");
-          this.myFireService.handleImageUpload(data);
+          // this.image = data['fileUrl'];
+          // this.notificationService.displayLoading(null, null)
+          // this.notificationService.display('info', "Image was uploaded");
+          // this.myFireService.handleImageUpload(data);
 
         })
         .catch(err => {
