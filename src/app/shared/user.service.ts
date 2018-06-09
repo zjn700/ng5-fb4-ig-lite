@@ -19,7 +19,7 @@ export class UserService {
     this.currentUser = user
 
     localStorage.setItem('user', JSON.stringify(user));
-    console.log("setUserProfile in UserService", user)
+    //console.log("setUserProfile in UserService", user)
   }
   
   
@@ -50,7 +50,7 @@ export class UserService {
     
     // // UNNECESSARY  
     // this.userProfileData.next(user); // BehaviorSubject
-    // console.log('this.userProfileData', this.userProfileData.getValue())
+    // //console.log('this.userProfileData', this.userProfileData.getValue())
 
   // getUserProfileData() {
   //   return this.userProfileData.getValue()

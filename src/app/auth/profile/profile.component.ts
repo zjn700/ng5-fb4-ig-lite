@@ -40,8 +40,8 @@ export class ProfileComponent implements OnInit {
   
    @HostListener('window:resize', ['$event']) onResize($event) {
       let menuItems = document.getElementsByClassName("postImage"); 
-      // console.log("event", event)
-      // console.log("menuItems", menuItems)
+      // //console.log("event", event)
+      // //console.log("menuItems", menuItems)
       for (let i=0; i < menuItems.length; i++) {
             let evt = {currentTarget: menuItems[i]}
             // this.utilityService.onImageLoad(evt)
@@ -60,13 +60,13 @@ export class ProfileComponent implements OnInit {
   // $(document).ready(function(){
   //       // $('[data-toggle="tooltip"]').tooltip()
   //       $("p").click(function(){
-  //           console.log("here")
+  //           //console.log("here")
   //           $(this).hide();
   //       });
   //   });
 
     $("p").click(function(){
-        console.log("here")
+        //console.log("here")
         $(this).hide();
     });
     // $(function() {
@@ -76,13 +76,13 @@ export class ProfileComponent implements OnInit {
     // const onload = this.onImageLoad()
     
     // function onload(event){
-    //         console.log('content dimension changed 2', event.onchange());
+    //         //console.log('content dimension changed 2', event.onchange());
 
     // }
     
   //   let card = $('.card')
   //   new ResizeSensor(card, function(event){ 
-  //     // console.log('content dimension changed width', card.onchange());
+  //     // //console.log('content dimension changed width', card.onchange());
   //     // onload(event)
   //     // this.onImageLoad(event)
 
@@ -106,15 +106,15 @@ export class ProfileComponent implements OnInit {
   }
   
   onImageLoad(event) {
-    console.log('event', event)
+    //console.log('event', event)
       this.utilityService.onImageLoad(event)
   }
   onImageChange(event) {
-    console.log('change event =========================', event)
+    //console.log('change event =========================', event)
     // this.utilityService.onImageLoad(event)
   }  
   onImageClick(event) {
-    console.log('click event', event)
+    //console.log('click event', event)
       // this.utilityService.onImageLoad(event)
   }  
   

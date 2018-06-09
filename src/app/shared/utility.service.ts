@@ -9,9 +9,9 @@ export class UtilityService {
   constructor(private notificationService: NotificationService) { }
   
   checkForPosts(posts, message, type) {
-    console.log("in checkForPosts")
+    //console.log("in checkForPosts")
       if (posts.length==0) {
-        console.log('wtf')
+        //console.log('wtf')
         this.notificationService.display(type, message)
       }        
   }
@@ -34,7 +34,7 @@ export class UtilityService {
 
   // promise model 2
   doAsyncTask2(uid, followedUserList) {
-      console.log("doAsyncTask2", uid, followedUserList)
+      //console.log("doAsyncTask2", uid, followedUserList)
     return new Promise((resolve, reject) => {
         let followed=null
         for (let i=0; i < followedUserList.length; i++) {
@@ -56,7 +56,7 @@ export class UtilityService {
     if ((srcwidth <= 0) || (srcheight <= 0) || (targetwidth <= 0) || (targetheight <= 0)) {
         return result;
     }
-    console.log("src w, h", srcwidth, srcheight)
+    //console.log("src w, h", srcwidth, srcheight)
     // scale to the target width
     var scaleX1 = targetwidth;
     var scaleY1 = (srcheight * targetwidth) / srcwidth;
@@ -74,7 +74,7 @@ export class UtilityService {
       fScaleOnWidth = !fLetterBox;
     }
     
-    console.log("fScaleOnWidth, fLetterBox", fScaleOnWidth, fLetterBox)
+    //console.log("fScaleOnWidth, fLetterBox", fScaleOnWidth, fLetterBox)
     if (fScaleOnWidth) {
         result.width = Math.floor(scaleX1);
         result.height = Math.floor(scaleY1);
@@ -95,7 +95,7 @@ export class UtilityService {
  // 
  
  onImageLoad(evt) {
-    console.log("evt", evt)
+    //console.log("evt", evt)
 
     var img = evt.currentTarget;
 
@@ -111,11 +111,11 @@ export class UtilityService {
     // adjust the image coordinates and size
     img.width = result.width;
     img.height = result.height;
-    console.log("img w h", img.width, img.height)
+    //console.log("img w h", img.width, img.height)
     $(img).css("left", result.targetleft);
     $(img).css("top", result.targettop);
     
-    console.log("img", img)
+    //console.log("img", img)
   }
  
  
@@ -128,7 +128,7 @@ export class UtilityService {
         // PROMISE TEST 1 - SIMPLE PROMISE
         // this.utilityService.doAsyncTask()
         //   .then(
-        //     (val) => console.log(val),
+        //     (val) => //console.log(val),
         //     (err) => console.error(err)
         //   )
 
@@ -137,20 +137,20 @@ export class UtilityService {
         //   this.utilityService.doAsyncTask2()
         //           .then(
         //               (val) => {
-        //                 console.log("val =====", val);
+        //                 //console.log("val =====", val);
         //                 return "blah"; 
         //               }
         //           )
         //           .then( 
         //               (val) => {
-        //                 console.log("val2 ", val);
+        //                 //console.log("val2 ", val);
         //                 throw new Error(JSON.stringify({id: "2", message: "You fucked up."}));
         //               }
         //           )
         //           .catch(
         //               (err) => {
         //                 console.error(err);
-        //                 console.log(JSON.parse(err.message).message)
+        //                 //console.log(JSON.parse(err.message).message)
         //               }
         //           )
         
@@ -163,7 +163,7 @@ export class UtilityService {
   //   if ((srcwidth <= 0) || (srcheight <= 0) || (targetwidth <= 0) || (targetheight <= 0)) {
   //       return result;
   //   }
-  //   console.log("src w, h", srcwidth, srcheight)
+  //   //console.log("src w, h", srcwidth, srcheight)
   //   // scale to the target width
   //   var scaleX1 = targetwidth;
   //   var scaleY1 = (srcheight * targetwidth) / srcwidth;
@@ -180,7 +180,7 @@ export class UtilityService {
   //   else {
   //     fScaleOnWidth = !fLetterBox;
   //   }
-  //   console.log("fScaleOnWidth, fLetterBox", fScaleOnWidth, fLetterBox)
+  //   //console.log("fScaleOnWidth, fLetterBox", fScaleOnWidth, fLetterBox)
   //   if (fScaleOnWidth) {
   //       result.width = Math.floor(scaleX1);
   //       result.height = Math.floor(scaleY1);

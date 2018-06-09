@@ -1,5 +1,7 @@
 # IgLite
 
+ng serve --host 0.0.0.0 --port 8080 --disable-host-check
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.7.4.
 
 ## Development server

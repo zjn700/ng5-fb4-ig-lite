@@ -43,10 +43,10 @@ export class PostComponent implements OnInit, OnDestroy {
   @Output() unfollowUser = new EventEmitter<any>();
 
    @HostListener('window:resize', ['$event']) onResize($event) {
-     console.log("window resize")
+     //console.log("window resize")
       let menuItems = document.getElementsByClassName("postImage"); 
-      // console.log("event", event)
-      // console.log("menuItems", menuItems)
+      // //console.log("event", event)
+      // //console.log("menuItems", menuItems)
       for (let i=0; i < menuItems.length; i++) {
             let evt = {currentTarget: menuItems[i]}
             // this.utilityService.onImageLoad(evt)
@@ -69,7 +69,7 @@ export class PostComponent implements OnInit, OnDestroy {
   ngOnInit() {
     
     const userSavedInService = this.userService.getCurrentUser()
-    console.log('userSavedInService post', userSavedInService);
+    //console.log('userSavedInService post', userSavedInService);
     
     const uid = firebase.auth().currentUser.uid
     
@@ -161,12 +161,12 @@ export class PostComponent implements OnInit, OnDestroy {
   }
 
   onImageLoad(event) {
-    console.log('event', event)
+    //console.log('event', event)
       this.utilityService.onImageLoad(event)
   }
   
   onImageClick(event) {
-    console.log('click event', event)
+    //console.log('click event', event)
       // this.utilityService.onImageLoad(event)
   }   
   
@@ -180,26 +180,26 @@ export class PostComponent implements OnInit, OnDestroy {
       //     if (error) {
       //       // The write failed...
       //     } else {
-      //       console.log("no error")
+      //       //console.log("no error")
       //       // Data saved successfully!
       //     }
       // })
 
 
 
-    // console.log("this.imageKey", this.imageKey )
-          // console.log('key snapshot', snapshot.key)          
-          // console.log('fav snapshot', snapshot.val().favoriteCount)
+    // //console.log("this.imageKey", this.imageKey )
+          // //console.log('key snapshot', snapshot.key)          
+          // //console.log('fav snapshot', snapshot.val().favoriteCount)
 
-      // console.log('this.imageData', this.imageData)
+      // //console.log('this.imageData', this.imageData)
       // const uid = firebase.auth().currentUser.uid
       // firebase.database().ref('favorites').child(uid)
       // .once('value')
       // .then(snapshot => {
-      //   console.log("snapshot.val()", snapshot.val().key)
+      //   //console.log("snapshot.val()", snapshot.val().key)
       // })
       
       // // this.message = message; 
-      // console.log("post nginit  getfavmsg message", message)
+      // //console.log("post nginit  getfavmsg message", message)
       // // this.myFireService.clearMessage();
-      // console.log("this.imageData", this.imageData);
+      // //console.log("this.imageData", this.imageData);

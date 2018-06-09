@@ -26,7 +26,7 @@ export class MyFireService {
     refTemp.once('value')
       .then(snapshot => {
         if (snapshot.exists()) {
-          console.log("Yep, but we can fix that", snapshot.val())
+          //console.log("Yep, but we can fix that", snapshot.val())
           const userData = snapshot.val();
           firebase.database().ref('users/' + userData.uid).set(
             {
@@ -42,44 +42,44 @@ export class MyFireService {
           })            
           
         } else {
-          console.log("None============== good to go")
+          //console.log("None============== good to go")
           return false
         }
       })
   }
   
   getUserFromDatabase(uid) {
-    console.log("checkHoldingArea", this.checkHoldingArea(uid))
+    //console.log("checkHoldingArea", this.checkHoldingArea(uid))
     if (!this.checkHoldingArea(uid)) {
       const ref = firebase.database().ref('users/' + uid);
       return ref.once('value')
                     .then(snapshot => snapshot.val())
           
     }
-    // console.log("ooooooooooooooops")
+    // //console.log("ooooooooooooooops")
   }
     
     // const ref = firebase.database().ref('users/' + uid);
     // ref.once('value', (snapshot => {
     //   if (snapshot.exists()) {
-    //     console.log("user in db");
+    //     //console.log("user in db");
     //     const ref2 = firebase.database().ref('users/' + uid);
     //     // return ref.once('value')
     //     // return ref2.once('value')
     //     //           .then(snapshot => snapshot.val())
 
     //   } else {
-    //     console.log("not here")
+    //     //console.log("not here")
         
     //     const refTemp = firebase.database().ref('usersHoldingArea/' + uid);
     //     if (refTemp) { 
     //       refTemp.once('value')
     //         .then(snapshot => {
     //           if (snapshot.exists()) {
-    //             console.log('Yep', snapshot.val())
+    //             //console.log('Yep', snapshot.val())
     //             // snapshot.val()
     //           } else {
-    //             console.log("None")
+    //             //console.log("None")
     //           }
     //         })      
     //     }        
@@ -94,53 +94,53 @@ export class MyFireService {
     //   refTemp.once('value')
     //     .then(snapshot => {
     //       if (snapshot.exists()) {
-    //         console.log('Yep', snapshot.val())
+    //         //console.log('Yep', snapshot.val())
     //         // snapshot.val()
     //       } else {
-    //         console.log("None")
+    //         //console.log("None")
     //       }
     //     })      
     // }
     
-  //   console.log('oooops')
+  //   //console.log('oooops')
   //   // const ref2 = firebase.database().ref('users/' + uid);
   //   // return ref2.once('value')
   //   //           .then(snapshot => snapshot.val())
   // }
   
-  getUserFromDatabasexx(uid) {
-    const refTemp = firebase.database().ref('usersHoldingArea/' + uid);
-    console.log("refTemp", refTemp)
-      // if (refTemp) {
-        console.log("here")
-        refTemp.once('value')
-          .then(snapshot => {
-            console.log("then snapshot")
-            if (snapshot.exists()) {
-            const userData = snapshot.val()
-            console.log("userData val from holding area", userData, userData.uid)
-            const x = firebase.database().ref('users/' + userData.uid).set(
-              {
-                email: userData.email,
-                uid: userData.uid,
-                name: userData.name,
-                registrationDate: userData.registrationDate //new Date().toString()
-              }
-            )
-            refTemp.remove()
-            const ref = firebase.database().ref('users/' + uid);
-            return ref.once('value')
-                .then(snapshot => console.log("after remove",snapshot.val()))
-          // })
+  // getUserFromDatabasexx(uid) {
+  //   const refTemp = firebase.database().ref('usersHoldingArea/' + uid);
+  //   //console.log("refTemp", refTemp)
+  //     // if (refTemp) {
+  //       //console.log("here")
+  //       refTemp.once('value')
+  //         .then(snapshot => {
+  //           //console.log("then snapshot")
+  //           if (snapshot.exists()) {
+  //           const userData = snapshot.val()
+  //           //console.log("userData val from holding area", userData, userData.uid)
+  //           const x = firebase.database().ref('users/' + userData.uid).set(
+  //             {
+  //               email: userData.email,
+  //               uid: userData.uid,
+  //               name: userData.name,
+  //               registrationDate: userData.registrationDate //new Date().toString()
+  //             }
+  //           )
+  //           refTemp.remove()
+  //           const ref = firebase.database().ref('users/' + uid);
+  //           return ref.once('value')
+  //               .then(snapshot => //console.log("after remove",snapshot.val()))
+  //         // })
            
-      } else {
+  //     } else {
   
-        const ref = firebase.database().ref('users/' + uid);
-        return ref.once('value')
-                .then(snapshot => console.log("snapshot, no holding area", snapshot.val()))
-      }
-    })
-  }
+  //       const ref = firebase.database().ref('users/' + uid);
+  //       return ref.once('value')
+  //               .then(snapshot => //console.log("snapshot, no holding area", snapshot.val()))
+  //     }
+  //   })
+  // }
   
   getUserPostRef(uid) {
     return firebase.database().ref('myposts').child(uid);
@@ -151,13 +151,13 @@ export class MyFireService {
   }
   
   verifyUserIsFollowed(uid, uploadedBy) {
-    console.log("in verifyUserIsFollowed", uid, uploadedBy)
+    //console.log("in verifyUserIsFollowed", uid, uploadedBy)
 
     return firebase.database().ref('following/' + uid + '/' + uploadedBy)
       .once('value')
       .then(snapshot => {
         let userFollowed
-        console.log("snapshot.val in fireb service", snapshot.val(), snapshot.key)
+        //console.log("snapshot.val in fireb service", snapshot.val(), snapshot.key)
         if (snapshot.val()){
           userFollowed = snapshot.val()
         } else {
@@ -168,13 +168,91 @@ export class MyFireService {
       
   }
   
+  resizeImagexx(file){
+    if(file.type.match(/image.*/)) {
+      console.log('An image has been loaded ==========');
+      console.log("file", file)
+      // Load the image
+      var reader = new FileReader();
+      reader.onload = function (readerEvent) {
+          var image = new Image();
+          image.onload = function (imageEvent) {
+
+              // Resize the image
+              var canvas = document.createElement('canvas'),
+                  max_size = 544,// TODO : pull max size from a site config
+                  width = image.width,
+                  height = image.height;
+              if (width > height) {
+                  if (width > max_size) {
+                      height *= max_size / width;
+                      width = max_size;
+                  }
+              } else {
+                  if (height > max_size) {
+                      width *= max_size / height;
+                      height = max_size;
+                  }
+              }
+              canvas.width = width;
+              canvas.height = height;
+              console.log("canvas width, height", width, height)
+              canvas.getContext('2d').drawImage(image, 0, 0, width, height);
+              var dataUrl = canvas.toDataURL('image/jpeg');
+              console.log("dataUrl ==================", dataUrl)
+              // var resizedImage = dataURLToBlob(dataUrl);
+              // $.event.trigger({
+              //     type: "imageResized",
+              //     blob: resizedImage,
+              //     url: dataUrl
+              // });
+          }
+          // image.src = readerEvent.target.result;
+          image.src = reader.result;
+          console.log("image.src fire service", image.src)
+          return image.src
+      }
+      // reader.readAsDataURL(file);
+    }  
+  }
+  
   // FILE UPLOAD
-  uploadFile(file) {
-    
+  uploadImageBlob(file, bytes) {
+    // var bytes = new Uint8Array()
+    // console.log("bytes", bytes)
     const fileName = this.randomizeFileName(file.name)
 
-    const fileRef = firebase.storage().ref().child('image/' + fileName )
+    const fileRef = firebase.storage().ref().child('image3/' + fileName )
+    fileRef.put(bytes).then((snapshot)=> {
+      console.log('Uploaded an array!', fileName, snapshot);
+    })
+  }
+
+
+  uploadImageFile(file, base64ImageUrl) {
+    console.log("base64ImageUrl", base64ImageUrl)
+    const fileName = this.randomizeFileName(file.name)
+  
+
+    const fileRef = firebase.storage().ref().child('image2/' + fileName )
+    console.log("fileRef", fileRef)
+    // const uploadTask = fileRef.put(file);
+    
+    const uploadTask = fileRef.putString(base64ImageUrl, 'data_url')
+     .then((snapshot)=>{
+         console.log('Uploaded a data_url string!', fileName);
+     })
+
+  }
+
+  uploadFile(file) {
+    /////////
+    const fileName = this.randomizeFileName(file.name)
+
+    const fileRef = firebase.storage().ref().child('image1a/' + fileName )
     const uploadTask = fileRef.put(file);
+    
+    // const uploadTask = fileRef.putString(base64ImageUrl, 'data_url')
     
     return new Promise((resolve, reject) => {
       uploadTask.on('state_changed', snapshot=> {
@@ -206,8 +284,8 @@ export class MyFireService {
     // const currentUser = this.userService.getUser();
     // const currentUser = this.userService.getCurrentUser()
     const user = this.userService.getCurrentUser()
-    // console.log('user', user);
-    // console.log('currentUseruser', currentUser);
+    // //console.log('user', user);
+    // //console.log('currentUseruser', currentUser);
     
     const imageKey = firebase.database().ref('images').push().key;
     const imageDetails = {
@@ -388,17 +466,17 @@ export class MyFireService {
       //console.log("followedUsers xxxxx", followedUsers)
     })
     if (followedUsers.length==0) { 
-      console.log("OOPSSSSSSSSSSS", followedUsers, followedUsers.length) 
+      //console.log("OOPSSSSSSSSSSS", followedUsers, followedUsers.length) 
     }
     return followedUsers
 
   }
   
   getFollowedUserArrayPromise(uid) {
-    console.log("getFollowedUserArrayPromise")
+    //console.log("getFollowedUserArrayPromise")
     return new Promise((resolve, reject) => {
       const followedRef = this.getUsersFollowed(uid)
-      console.log("followedRef=====", followedRef)
+      //console.log("followedRef=====", followedRef)
       let followedUsers = new Array()
       // let followedUsers = []
       //console.log("============")
@@ -436,21 +514,21 @@ export class MyFireService {
   // }
   
   checkUidAgainstFollowedUsersPromise(uid, followedUserList) {
-    console.log("checkUidAgainstFollowedUsersPromise")
+    //console.log("checkUidAgainstFollowedUsersPromise")
     //return new Promise((resolve, reject) => {
     let promise =  new Promise((resolve, reject) => {
     setTimeout(()=>{
-        console.log("checkUidAgainstFollowedUsersPromise", "uid", uid , "list length", followedUserList.length,"followedlist", followedUserList)
+        //console.log("checkUidAgainstFollowedUsersPromise", "uid", uid , "list length", followedUserList.length,"followedlist", followedUserList)
         let followed=null
         for (let i=0; i < followedUserList.length; i++) {
-           console.log("uids", uid, followedUserList[i].uid, (uid===followedUserList[i].uid))
+           //console.log("uids", uid, followedUserList[i].uid, (uid===followedUserList[i].uid))
            if (uid===followedUserList[i].uid) {
              followed = followedUserList[i].name
-             console.log('++++++ before break', followed)
+             //console.log('++++++ before break', followed)
              break;
            }
         }
-        console.log("resolve follow", followed)
+        //console.log("resolve follow", followed)
         resolve(followed);
       }, 500)      
     });
@@ -459,13 +537,13 @@ export class MyFireService {
   
   checkUidAgainstFollowedUsers(uid, followedUserList) {
     // setTimeout(()=>{
-      console.log("checkUidAgainstFollowedUsers", "uid", uid , "list length", followedUserList.length,"followedlist", followedUserList)
+      //console.log("checkUidAgainstFollowedUsers", "uid", uid , "list length", followedUserList.length,"followedlist", followedUserList)
       let followed=null
       for (let i=0; i < followedUserList.length; i++) {
-         console.log("uids", uid, followedUserList[i].uid, (uid===followedUserList[i].uid))
+         //console.log("uids", uid, followedUserList[i].uid, (uid===followedUserList[i].uid))
          if (uid===followedUserList[i].uid) {
            followed = followedUserList[i].name
-           console.log('++++++ before break', followed)
+           //console.log('++++++ before break', followed)
            break;
          }
       }

@@ -32,14 +32,14 @@ export class MyPostsComponent implements OnInit, OnDestroy {
     const currentUser = this.userService.getUser();
         // const uid = firebase.auth().currentUser.uid
     const userSavedInService = this.userService.getCurrentUser()
-    console.log('userSavedInService mypost', userSavedInService);
+    //console.log('userSavedInService mypost', userSavedInService);
     
-    console.log('currentUseruser uid', currentUser.uid);
+    //console.log('currentUseruser uid', currentUser.uid);
     const uid = firebase.auth().currentUser.uid;
-    console.log("uid from auth", uid)
+    //console.log("uid from auth", uid)
     this.personalPostRef = this.myFireService.getUserPostRef(uid);
     this.personalPostRef.on('child_added', data => {
-      console.log("data my post init", data.val())
+      //console.log("data my post init", data.val())
       this.postLists.push({
         // key: data.key,
         key: data.val().imageKey,
@@ -48,12 +48,156 @@ export class MyPostsComponent implements OnInit, OnDestroy {
     })
 
   }
+  
+  resizeImage(file) {
+       
+       let mfs = this.myFireService
+       let thi$ = this
+ 
+      if(file.type.match(/image.*/)) {
+        console.log('An image has been loaded');
+        console.log("file", file)
+        // Load the image
+        var reader = new FileReader();
+        reader.onload = function (readerEvent) {
+            var image = new Image();
+            console.log("onreader load")
+            image.onload = function (imageEvent) {
+
+                // Resize the image
+                var canvas = document.createElement('canvas'),
+                    // max_size = 544,// TODO : pull max size from a site config
+                    max_size = 1280,// TODO : pull max size from a site config
+                    width = image.width,
+                    height = image.height;
+                if (width > height) {
+                    if (width > max_size) {
+                        height *= max_size / width;
+                        width = max_size;
+                    }
+                } else {
+                    if (height > max_size) {
+                        width *= max_size / height;
+                        height = max_size;
+                    }
+                }
+                canvas.width = width;
+                canvas.height = height;
+                console.log("canvas width, height", width, height)
+                canvas.getContext('2d').drawImage(image, 0, 0, width, height);
+                var dataUrl = canvas.toDataURL('image/jpeg');
+                var resizedImage = thi$.dataURLToBlob(dataUrl);
+                mfs.uploadImageBlob(file, resizedImage)
+                // $.event.trigger({
+                //     type: "imageResized",
+                //     blob: resizedImage,
+                //     url: dataUrl
+                // });
+            }
+            // image.src = readerEvent.target.result;
+            image.src = reader.result;
+            console.log("image.src", image.src)
+            // return image.src
+            mfs.uploadImageFile(file, image.src)
+        }
+        reader.readAsDataURL(file);
+      }
+    
+  }
+
+
+   /* Utility function to convert a canvas to a BLOB */
+  dataURLToBlob(dataURL) {
+    var BASE64_MARKER = ';base64,';
+    if (dataURL.indexOf(BASE64_MARKER) == -1) {
+        var parts = dataURL.split(',');
+        var contentType = parts[0].split(':')[1];
+        var raw = parts[1];
+        console.log("raw", raw)
+
+        return new Blob([raw], {type: contentType});
+    }
+
+    var parts = dataURL.split(BASE64_MARKER);
+    var contentType = parts[0].split(':')[1];
+    var raw2 = window.atob(parts[1]);
+    var rawLength = raw2.length;
+
+    var uInt8Array = new Uint8Array(rawLength);
+
+    for (var i = 0; i < rawLength; ++i) {
+        uInt8Array[i] = raw2.charCodeAt(i);
+    }
+    console.log("uInt8Array", uInt8Array)
+    return new Blob([uInt8Array], {type: contentType});
+  }
+  
 
   onFileSelection(event){
     const fileList: FileList = event.target.files;
     
     if (fileList.length > 0) {
       const file: File = fileList[0];
+      
+      // console.log("resizeImage", this.myFireService.uploadImageFile(this.resizeImage(file)))
+      this.resizeImage(file)
+
+      
+      
+      // if(file.type.match(/image.*/)) {
+      //   console.log('An image has been loaded');
+      //   console.log("file", file)
+      //   // Load the image
+      //   var reader = new FileReader();
+      //   reader.onload = function (readerEvent) {
+      //       var image = new Image();
+      //       console.log("onreader load")
+      //       image.onload = function (imageEvent) {
+
+      //           // Resize the image
+      //           var canvas = document.createElement('canvas'),
+      //               max_size = 544,// TODO : pull max size from a site config
+      //               width = image.width,
+      //               height = image.height;
+      //           if (width > height) {
+      //               if (width > max_size) {
+      //                   height *= max_size / width;
+      //                   width = max_size;
+      //               }
+      //           } else {
+      //               if (height > max_size) {
+      //                   width *= max_size / height;
+      //                   height = max_size;
+      //               }
+      //           }
+      //           canvas.width = width;
+      //           canvas.height = height;
+      //           console.log("canvas width, height", width, height)
+      //           canvas.getContext('2d').drawImage(image, 0, 0, width, height);
+      //           var dataUrl = canvas.toDataURL('image/jpeg');
+      //           // var resizedImage = dataURLToBlob(dataUrl);
+      //           // $.event.trigger({
+      //           //     type: "imageResized",
+      //           //     blob: resizedImage,
+      //           //     url: dataUrl
+      //           // });
+      //       }
+      //       // image.src = readerEvent.target.result;
+      //       image.src = reader.result;
+      //       console.log("image.src", image.src)
+      //       //return image.src
+      //       // this.myFireService.uploadImageFile(image.src)
+      //   }
+      //   reader.readAsDataURL(file);
+      // }
+      
+      
+      
+      
+      
+      
+      
+      
       this.notificationService.displayLoading('info', "Uploading your image: " + file.name)
        
       this.myFireService.uploadFile(file)

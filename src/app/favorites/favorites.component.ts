@@ -7,6 +7,7 @@ import * as _ from "lodash"
 import { MyFireService } from "../shared/my-fire.service";
 import { NotificationService } from "../shared/notification.service";
 import { UtilityService } from '../shared/utility.service';
+import { UserService } from '../shared/user.service';
 
 @Component({
   selector: 'app-favorites',
@@ -24,12 +25,29 @@ export class FavoritesComponent implements OnInit {
   constructor(private myFireService: MyFireService, 
               private notificationService: NotificationService,
               private utilityService: UtilityService,
+              private userService: UserService,
               private router: Router) { }
 
   ngOnInit() {
+    const curUser = this.userService.getCurrentUser()
+    const refTemp = firebase.database().ref('favorites/' + curUser.uid);
+      refTemp.once('value')
+        .then(snapshot => {
+          if (!snapshot.exists()) {
+            console.log("ain't got no favs")
+            this.notificationService.display("info", "You have no favorites")
+
+            // this.utilityService.checkForPosts(this.all, "You have no favorites", "info")
+          } else {
+            console.log("yes there are favs")
+            this.getFavoriteImages()
+
+          }
+        })
+  }
        
 
-        
+  getFavoriteImages() {     
     // These firebase tasks should be moved to the firebase service
     const uid = firebase.auth().currentUser.uid
 
@@ -41,40 +59,41 @@ export class FavoritesComponent implements OnInit {
             let followedUsers = followedList
             // const followedUsers = this.myFireService.getFollowedUserArray(uid)
             // console.log("followedUsers===========", followedUsers)
-            const refTemp = firebase.database().ref('favorites/' + uid);
-            refTemp.once('value')
-              .then(snapshot => {
-                if (!snapshot.exists()) {
-                  console.log("ain't got no favs")
-                  this.notificationService.display("info", "You have no favorites")
+            // const refTemp = firebase.database().ref('favorites/' + uid);
+            // refTemp.once('value')
+            //   .then(snapshot => {
+            //     if (!snapshot.exists()) {
+            //       console.log("ain't got no favs")
+            //       this.notificationService.display("info", "You have no favorites")
 
-                  // this.utilityService.checkForPosts(this.all, "You have no favorites", "info")
-
-                } else {
-                  console.log("yes there are favs")
-                }
-              })
+            //       // this.utilityService.checkForPosts(this.all, "You have no favorites", "info")
+            //     } else {
+            //       console.log("yes there are favs")
+            //     }
+            //   })
             
             
             
             this.allRef = firebase.database().ref('favorites/' + uid);
             this.allRef.on('child_added', data => {
-              console.log("checking...")
+              console.log("checking...confirming data exists on(child_added...instead of with once")
               if (data.exists()) { console.log("yes data exists") } else { console.log("nope no data here")}
-              let itemKey=null
-              data.forEach((key)=>{
-                console.log(key)
-                key.forEach((key)=>{
-                  console.log(key)
-                })
-              })
+
+              // let itemKey=null
+              // data.forEach((key)=>{
+              //   console.log(key)
+              //   key.forEach((key)=>{
+              //     console.log(key)
+              //   })
+              // })
               
-              for (var key in data.val()) {
-                console.log("item======", key)
-                for (var item in data.val()[key]['upLoadedBy']) {
-                  console.log("item", item)
-                }
-              }
+              // for (var key in data.val()) {
+              //   console.log("item======", key)
+              //   for (var item in data.val()[key]['upLoadedBy']) {
+              //     console.log("item", item)
+              //     console.log("key", key)
+              //   }
+              // }
 
               // console.log("data val", data.val(), "data key",data.key)
               this.myFireService.checkUidAgainstFollowedUsersPromise(data.val().upLoadedBy.uid, followedUsers)
@@ -94,12 +113,10 @@ export class FavoritesComponent implements OnInit {
                 // .then(()=>{
                 //   console.log("chekck for posts")
                 //   setTimeout(()=>{this.utilityService.checkForPosts(this.all, "You have no favorites", "info")}, 500)
-
                 // });
                 
             })
             // setTimeout(()=>{this.utilityService.checkForPosts(this.all, "You have no favorites", "info")}, 1000)
-
         }, (err)=>console.log("ERRRRR", err))
   }
   
@@ -160,13 +177,8 @@ export class FavoritesComponent implements OnInit {
           if (followedUid == post.data.upLoadedBy.uid && !add) {
             post.followed = null
             // this.displayFollowButton=true
-
           }     
       })
       
     }
-  
-  
-  
-
 }

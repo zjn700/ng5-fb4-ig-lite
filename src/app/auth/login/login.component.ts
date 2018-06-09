@@ -37,7 +37,7 @@ export class LoginComponent implements OnInit {
       })
       .then(userDataFromDb => {
         if (userDataFromDb){
-          console.log("userDataFromDb", userDataFromDb)
+          //console.log("userDataFromDb", userDataFromDb)
           this.userService.setUserProfile(userDataFromDb)
           this.router.navigate(['/allposts'])
           // this.router.navigate(['/myposts'])

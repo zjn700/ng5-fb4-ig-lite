@@ -77,7 +77,7 @@ export class AllPostsComponent implements OnInit, OnDestroy {
         //console.log("============")
 
     const userSavedInService = this.userService.getCurrentUser()
-    console.log('userSavedInService allpost', userSavedInService);
+    //console.log('userSavedInService allpost', userSavedInService);
 
     this.allRef = firebase.database().ref('allposts').limitToFirst(this.maxPerLoad);
     
@@ -158,7 +158,7 @@ export class AllPostsComponent implements OnInit, OnDestroy {
         this.myFireService.setFavoriteUpdate(imageData.imageKey);
       })
       .catch(err => {
-        console.log('err', err.message)
+        //console.log('err', err.message)
         this.notificationService.display("error", err.message)
       })
     
@@ -171,7 +171,7 @@ export class AllPostsComponent implements OnInit, OnDestroy {
         this.myFireService.setFavoriteUpdate(imageData.imageKey)
       })
       .catch(err => {
-        console.log('err', err.message)
+        //console.log('err', err.message)
         this.notificationService.display("error", err.message)
       })
   }
@@ -188,7 +188,7 @@ export class AllPostsComponent implements OnInit, OnDestroy {
         this.myFireService.setFollowUpdate(image.imageData.upLoadedBy);
       })
       .catch(err => {
-        console.log('err', err.message)
+        //console.log('err', err.message)
         this.notificationService.display("error", err.message)
       })    
     
@@ -213,7 +213,7 @@ export class AllPostsComponent implements OnInit, OnDestroy {
         
       })
       .catch(err => {
-        console.log('err', err.message)
+        //console.log('err', err.message)
         this.notificationService.display("error", err.message)
       })
   }  

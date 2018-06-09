@@ -85,10 +85,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
 
   // testGup(){
-  //   console.log("tgup")
+  //   //console.log("tgup")
   //   const $profile = this.userService.getUserProfile()
   //   .subscribe((userData)=>{
-  //     console.log('userData-olo', userData)
+  //     //console.log('userData-olo', userData)
   //     // this.name= userData.name;
   //     $profile.unsubscribe()
       

@@ -50,30 +50,37 @@ export class FollowingComponent implements OnInit, OnDestroy {
     
     followUserRef.once('value', data => {
       
-      //console.log("data val", data.val())
+      if (!data.exists()) {
+          //console.log("ain't following anyone")
+          this.notificationService.display("info", "You are not following anyone")
+  
+        } else {
       
-      const otherUsersUids = _.keys(data.val())
-      console.log("otherUsersUids", otherUsersUids)
-      this.getOtherUsersPosts(otherUsersUids, uid);
+          //console.log("data val", data.val())
+          
+          const otherUsersUids = _.keys(data.val())
+          //console.log("otherUsersUids", otherUsersUids)
+          this.getOtherUsersPosts(otherUsersUids, uid);
+        }
     }) 
   }
   
   getOtherUsersPosts(uidList, uid){
 
-    const refTemp = firebase.database().ref('following/' + uid);
-    refTemp.once('value')
-      .then(snapshot => {
-        if (!snapshot.exists()) {
-          console.log("ain't following anyone")
-          this.notificationService.display("info", "You are not following anyone")
+    // const refTemp = firebase.database().ref('following/' + uid);
+    // refTemp.once('value')
+    //   .then(snapshot => {
+    //     if (!snapshot.exists()) {
+    //       //console.log("ain't following anyone")
+    //       this.notificationService.display("info", "You are not following anyone")
   
-        } else {
-          console.log("yes i am following them")
-        }
-      })
+    //     } else {
+    //       //console.log("yes i am following them")
+    //     }
+    //   })
       
     const followedUsers = this.myFireService.getFollowedUserArray(uid)
-    console.log("followedUsers====", followedUsers)
+    //console.log("followedUsers====", followedUsers)
     this.postList.length=0;
     for(let count=0; count < uidList.length; count++){
       this.refArray[count] = this.myFireService.getUserPostRef(uidList[count]);
@@ -92,20 +99,20 @@ export class FollowingComponent implements OnInit, OnDestroy {
         this.utilityService.doAsyncTask2(tempList, followedUsers)
           .then(
               (val) => {
-                console.log("val =====", val);
+                //console.log("val =====", val);
                 return "blah"; 
               }
           )
           .then( 
               (val) => {
-                console.log("val2 ", val);
+                //console.log("val2 ", val);
                 throw new Error(JSON.stringify({id: "2", message: "You fucked up."}));
               }
           )
           .catch(
               (err) => {
                 console.error(err);
-                console.log(JSON.parse(err.message).message)
+                //console.log(JSON.parse(err.message).message)
               }
           )
       })
@@ -125,7 +132,7 @@ export class FollowingComponent implements OnInit, OnDestroy {
         this.getFollowedUsers();
       })
       .catch(err => {
-        console.log('err', err.message)
+        //console.log('err', err.message)
         this.notificationService.display("error", err.message)
       })    
   }
